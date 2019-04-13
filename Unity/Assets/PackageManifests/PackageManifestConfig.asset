@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a29f67b488b4458983fd973bbda8c8fa, type: 3}
+  m_Name: PackageManifestConfig
+  m_EditorClassIdentifier: 
+  packageSourcePaths:
+  - Assets/JCMG
+  packageDestinationPath: ../../unity-package-tools_release
+  packageName: com.jeffcampbellmakesgames.packagetools
+  displayName: JCMG Package Tools
+  packageVersion: 1.0.1
+  unityVersion: 2018.1
+  description: Contains a set of Unity development tools to help support exporting
+    and/or updating package contents. \n\nFor more information, see https://github.com/jeffcampbellmakesgames/unity-package-tools
+    for more information.
+  category: Tools
+  keywords:
+  - package
+  - package manager
+  dependencies: []
+  _id: cb87cda2-0bfa-44dc-b583-ae61ff81efcb
