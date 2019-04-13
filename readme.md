@@ -23,7 +23,7 @@ Using this library in your project can be done in two ways:
 }
 ```
 
-## Import and Usage
+## Usage
 To learn more about how to use JCMG Package Tools, see [here](./usage.md) for more information.
 
 ## Contributors
