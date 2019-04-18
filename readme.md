@@ -17,7 +17,7 @@ Using this library in your project can be done in two ways:
 {
 	"dependencies": {
 		...
-		"com.jeffcampbellmakesgames.packagetools" : "https://github.com/jeffcampbellmakesgames/unity-package-tools.git#release/stable"
+		"com.jeffcampbellmakesgames.packagetools" : "https://github.com/jeffcampbellmakesgames/unity-package-tools.git#release/stable",
 		...
 	}
 }
