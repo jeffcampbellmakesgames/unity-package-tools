@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JCMG.PackageTools.Editor
@@ -62,7 +63,12 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// A collection of paths to folders and files for the source for the package.
 		/// </summary>
-		public string[] packageSourcePaths;
+		public List<string> packageSourcePaths;
+
+		/// <summary>
+		/// A collection of file/folder paths to exclude from the package.
+		/// </summary>
+		public string[] packageIgnorePaths;
 
 		/// <summary>
 		/// A path to the package source distribution contents.

@@ -31,10 +31,12 @@ namespace JCMG.PackageTools.Editor
 	internal sealed class PackageManifestConfigInspector : UnityEditor.Editor
 	{
 		private ReorderableList _sourcePathsReorderableList;
+		private ReorderableList _excludePathsReorderableList;
 		private ReorderableList _keywordReorderableList;
 		private ReorderableList _dependenciesReorderableList;
 
 		private const string SourcePathsPropertyName = "packageSourcePaths";
+		private const string ExcludePathsPropertyName = "packageIgnorePaths";
 		private const string DestinationPathPropertyName = "packageDestinationPath";
 		private const string NamePropertyName = "packageName";
 		private const string DisplayNameProperty = "displayName";
@@ -54,6 +56,15 @@ namespace JCMG.PackageTools.Editor
 			{
 				drawHeaderCallback = DrawSourcePathHeader,
 				drawElementCallback = DrawSourcePathElement,
+				elementHeight = EditorConstants.FolderPathPickerHeight
+			};
+
+			_excludePathsReorderableList = new ReorderableList(
+				serializedObject,
+				serializedObject.FindProperty(ExcludePathsPropertyName))
+			{
+				drawHeaderCallback = DrawExcludePathHeader,
+				drawElementCallback = DrawExcludePathElement,
 				elementHeight = EditorConstants.FolderPathPickerHeight
 			};
 
@@ -103,6 +114,7 @@ namespace JCMG.PackageTools.Editor
 			EditorGUILayout.LabelField(EditorConstants.PackageContentHeader, EditorStyles.boldLabel);
 
 			_sourcePathsReorderableList.DoLayoutList();
+			_excludePathsReorderableList.DoLayoutList();
 
 			EditorGUILayout.BeginHorizontal();
 			var destinationPathProperty = serializedObject.FindProperty(DestinationPathPropertyName);
@@ -137,19 +149,33 @@ namespace JCMG.PackageTools.Editor
 
 		private void DrawSourcePathElement(Rect rect, int index, bool isActive, bool isFocused)
 		{
+			DrawPathElement(SourcePathsPropertyName, rect, index, isActive, isFocused);
+		}
+
+		private void DrawExcludePathHeader(Rect rect)
+		{
+			EditorGUI.LabelField(rect, EditorConstants.IgnorePathsHeaderLabel, EditorStyles.boldLabel);
+		}
+
+		private void DrawExcludePathElement(Rect rect, int index, bool isActive, bool isFocused)
+		{
+			DrawPathElement(ExcludePathsPropertyName, rect, index, isActive, isFocused);
+		}
+
+		private void DrawPathElement(string propertyName, Rect rect, int index, bool isActive, bool isFocused)
+		{
 			rect.width -= EditorConstants.FolderPathPickerHeight * 2;
 			rect.height = EditorConstants.FolderPathPickerHeight;
 			var sourcePathRect = new Rect(rect);
 
 			var sourcePathProperty =
-				serializedObject.FindProperty(SourcePathsPropertyName).GetArrayElementAtIndex(index);
+				serializedObject.FindProperty(propertyName).GetArrayElementAtIndex(index);
 			EditorGUI.PropertyField(
 				sourcePathRect,
 				sourcePathProperty,
 				new GUIContent(string.Format(EditorConstants.SourcePathElementLabelFormat, index)));
 
-			var filePickerRect = new Rect
-			{
+			var filePickerRect = new Rect {
 				position = new Vector2(
 					sourcePathRect.width + EditorConstants.FolderPathPickerBuffer,
 					sourcePathRect.position.y),
@@ -157,8 +183,7 @@ namespace JCMG.PackageTools.Editor
 				height = EditorConstants.FolderPathPickerHeight,
 			};
 
-			var folderPickerRect = new Rect
-			{
+			var folderPickerRect = new Rect {
 				position = new Vector2(
 					sourcePathRect.width + EditorConstants.FolderPathPickerHeight + EditorConstants.FolderPathPickerBuffer,
 					sourcePathRect.position.y),
