@@ -23,6 +23,7 @@ SOFTWARE.
 */
 using System;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -138,6 +139,7 @@ namespace JCMG.PackageTools.Editor
 					else
 					{
 						RecursivelyCopyDirectoriesAndFiles(
+							packageManifest,
 							new DirectoryInfo(normalizedSourcePath),
 							normalizedSourcePath,
 							normalizedDestinationPath);
@@ -179,10 +181,12 @@ namespace JCMG.PackageTools.Editor
 		/// Recursively copies all sub-folders and files in <see cref="DirectoryInfo"/> <paramref name="directoryInfo"/>
 		/// from parent folder <see cref="sourcePath"/> to <paramref name="destinationPath"/>.
 		/// </summary>
+		/// <param name="packageManifest"></param>
 		/// <param name="directoryInfo"></param>
 		/// <param name="sourcePath"></param>
 		/// <param name="destinationPath"></param>
 		private static void RecursivelyCopyDirectoriesAndFiles(
+			PackageManifestConfig packageManifest,
 			DirectoryInfo directoryInfo,
 			string sourcePath,
 			string destinationPath)
@@ -192,14 +196,28 @@ namespace JCMG.PackageTools.Editor
 			var subDirectoryInfo = directoryInfo.GetDirectories(EditorConstants.WildcardFilter);
 			foreach (var sdi in subDirectoryInfo)
 			{
+				// If any of the paths we're looking at match the ignore paths from the user, skip them
+				if (packageManifest.packageIgnorePaths.Any(x =>
+					sdi.FullName.Contains(Path.GetFullPath(Path.Combine(EditorConstants.ProjectPath, x)))))
+				{
+					continue;
+				}
+
 				Directory.CreateDirectory(sdi.FullName.Replace(normalizedSourcePath, normalizedDestinationPath));
 
-				RecursivelyCopyDirectoriesAndFiles(sdi, normalizedSourcePath, normalizedDestinationPath);
+				RecursivelyCopyDirectoriesAndFiles(packageManifest, sdi, normalizedSourcePath, normalizedDestinationPath);
 			}
 
 			var fileInfo = directoryInfo.GetFiles(EditorConstants.WildcardFilter);
 			foreach (var fi in fileInfo)
 			{
+				// If any of the paths we're looking at match the ignore paths from the user, skip them
+				if (packageManifest.packageIgnorePaths.Any(x =>
+					fi.FullName.Contains(Path.GetFullPath(Path.Combine(EditorConstants.ProjectPath, x)))))
+				{
+					continue;
+				}
+
 				var newPath = Path.GetFullPath(fi.FullName).Replace(normalizedSourcePath, normalizedDestinationPath);
 				File.Copy(fi.FullName, newPath);
 			}

@@ -21,6 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
+using UnityEngine;
+
 namespace JCMG.PackageTools.Editor
 {
 	/// <summary>
@@ -38,6 +41,8 @@ namespace JCMG.PackageTools.Editor
 		public const string AssetExtension = ".asset";
 		public const string MetaFormat = "{0}.meta";
 		public const string GeneratedFolderName = "Generated";
+		public static readonly string ProjectPath =
+			Application.dataPath.Remove(Application.dataPath.Length - 6, 6);
 
 		// Icons
 		public const string EditorFolderIcon = "Folder Icon";
@@ -50,6 +55,8 @@ namespace JCMG.PackageTools.Editor
 
 		public const string SourcePathsHeaderLabel = "Source Paths";
 		public const string SourcePathElementLabelFormat = "Path {0}:";
+
+		public const string IgnorePathsHeaderLabel = "Exclude Paths";
 
 		public const string KeywordsHeaderLabel = "Keywords";
 		public const string KeywordElementLabelFormat = "Keyword {0}:";
@@ -73,5 +80,6 @@ namespace JCMG.PackageTools.Editor
 
 		public const string PackageUpdateSuccessFormat =
 			"[Package Tools] Successfully updated package source for [{0}].";
+
 	}
 }

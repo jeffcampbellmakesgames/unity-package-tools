@@ -65,6 +65,11 @@ namespace JCMG.PackageTools.Editor
 		public string[] packageSourcePaths;
 
 		/// <summary>
+		/// A collection of file/folder paths to exclude from the package.
+		/// </summary>
+		public string[] packageIgnorePaths;
+
+		/// <summary>
 		/// A path to the package source distribution contents.
 		/// </summary>
 		[SerializeField]
