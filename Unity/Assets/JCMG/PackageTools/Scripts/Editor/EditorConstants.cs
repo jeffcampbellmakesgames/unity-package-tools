@@ -41,6 +41,9 @@ namespace JCMG.PackageTools.Editor
 		public const string AssetExtension = ".asset";
 		public const string MetaFormat = "{0}.meta";
 		public const string GeneratedFolderName = "Generated";
+		public const string UnityPackageNameFormat = "{0}_v{1}.unityPackage";
+		public const char EmptySpace = ' ';
+		public const char Underscore = '_';
 		public static readonly string ProjectPath =
 			Application.dataPath.Remove(Application.dataPath.Length - 6, 6);
 
@@ -65,11 +68,14 @@ namespace JCMG.PackageTools.Editor
 		public const string DependencyElementLabelFormat = "Dependency {0}:";
 
 		public const string UpdatePackageButtonText = "Export Package Source";
+		public const string ExportLegacyPackageButtonText = "Export as Legacy Package";
 
 		public static string SelectSourcePathFilePickerTitle = "Select Source Asset Path";
 		public const string SelectSourcePathPickerFolderTitle = "Select Source Folder Path";
 		public const string SelectPackageExportPathPickerTitle = "Select Package Export Folder";
 		public const string ProgressBarTitle = "Exporting Package Source";
+		public const string ProgressBarTitleLegacy = "Exporting Legacy Package";
+		public const string CompilingProgressMessage = "Compiling legacy package contents...";
 
 		public const float FolderPathPickerHeight = 26f;
 		public const float FolderPathPickerBuffer = 36f;
@@ -80,6 +86,5 @@ namespace JCMG.PackageTools.Editor
 
 		public const string PackageUpdateSuccessFormat =
 			"[Package Tools] Successfully updated package source for [{0}].";
-
 	}
 }

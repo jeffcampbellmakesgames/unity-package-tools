@@ -72,8 +72,12 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// A path to the package source distribution contents.
 		/// </summary>
-		[SerializeField]
 		public string packageDestinationPath;
+
+		/// <summary>
+		/// The relative path to the folder where the legacy package will be exported to.
+		/// </summary>
+		public string legacyPackageDestinationPath;
 
 		/// <summary>
 		/// The fully-qualified package name.

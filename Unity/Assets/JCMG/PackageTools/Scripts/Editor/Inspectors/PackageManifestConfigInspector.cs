@@ -38,6 +38,7 @@ namespace JCMG.PackageTools.Editor
 		private const string SourcePathsPropertyName = "packageSourcePaths";
 		private const string ExcludePathsPropertyName = "packageIgnorePaths";
 		private const string DestinationPathPropertyName = "packageDestinationPath";
+		private const string LegacyPackagePathPropertyName = "legacyPackageDestinationPath";
 		private const string NamePropertyName = "packageName";
 		private const string DisplayNameProperty = "displayName";
 		private const string PackageVersionPropertyName = "packageVersion";
@@ -116,6 +117,7 @@ namespace JCMG.PackageTools.Editor
 			_sourcePathsReorderableList.DoLayoutList();
 			_excludePathsReorderableList.DoLayoutList();
 
+			// Package Source Export
 			EditorGUILayout.BeginHorizontal();
 			var destinationPathProperty = serializedObject.FindProperty(DestinationPathPropertyName);
 			EditorGUILayout.PropertyField(
@@ -123,6 +125,17 @@ namespace JCMG.PackageTools.Editor
 				GUILayout.Height(EditorConstants.FolderPathPickerHeight));
 			GUILayoutTools.DrawFolderPickerLayout(
 				destinationPathProperty,
+				EditorConstants.SelectPackageExportPathPickerTitle);
+			EditorGUILayout.EndHorizontal();
+
+			// Legacy Package Export
+			EditorGUILayout.BeginHorizontal();
+			var legacyPackagePathProperty = serializedObject.FindProperty(LegacyPackagePathPropertyName);
+			EditorGUILayout.PropertyField(
+				legacyPackagePathProperty,
+				GUILayout.Height(EditorConstants.FolderPathPickerHeight));
+			GUILayoutTools.DrawFolderPickerLayout(
+				legacyPackagePathProperty,
 				EditorConstants.SelectPackageExportPathPickerTitle);
 			EditorGUILayout.EndHorizontal();
 
@@ -137,6 +150,11 @@ namespace JCMG.PackageTools.Editor
 			if (GUILayout.Button(EditorConstants.UpdatePackageButtonText))
 			{
 				FileTools.CreateOrUpdatePackageSource((PackageManifestConfig)target);
+			}
+
+			if (GUILayout.Button(EditorConstants.ExportLegacyPackageButtonText))
+			{
+				UnityFileTools.CompileLegacyPackage((PackageManifestConfig)target);
 			}
 		}
 
