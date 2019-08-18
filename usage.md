@@ -6,7 +6,7 @@ JCMG Package Tools is a library whose goal is ultimately aimed at making it easi
 ## Setting up your first package
 Creating your first package is a simple process that can be made more complex because information available about Unity Package manager is inconsistent right now. This is largely due to it not being widely and officially supported for end-users of Unity yet, but starting with 2019.1 will gain more official support.
 
-The first step is to create a `PackageManifestConfig` asset that we can use to define the properties and contents of our package. This can be done by right-clicking in the `Project` window and selecting "JCMG->Package Tools->Package Manifest Config". This will create an asset named `PackageManifestConfig` in that folder.
+The first step is to create a `PackageManifestConfig` asset that we can use to define the properties and contents of our package. This can be done by right-clicking in the `Project` window and selecting "Create->JCMG->Package Tools->Package Manifest Config". This will create an asset named `PackageManifestConfig` in that folder.
 
 ![Package Manifest Config Inspector](./Documentation/Inspector.png)
 
