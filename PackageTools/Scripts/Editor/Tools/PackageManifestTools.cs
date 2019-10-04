@@ -30,26 +30,26 @@ namespace JCMG.PackageTools.Editor
 	/// </summary>
 	internal static class PackageManifestTools
 	{
-		private static readonly StringBuilder _jsonStringBuilder
+		private static readonly StringBuilder JSON_STRING_BUILDER
 			= new StringBuilder(8192);
 
 		// Package Json Properties
-		private const string OpenBraces = "{";
-		private const string OpenBracket = "[";
-		private const string ClosedBraces = "}";
-		private const string ClosedBracket = "]";
-		private const string Comma = ",";
+		private const string OPEN_BRACES = "{";
+		private const string OPEN_BRACKET = "[";
+		private const string CLOSED_BRACES = "}";
+		private const string CLOSED_BRACKET = "]";
+		private const string COMMA = ",";
 
-		private const string Name = @"""name"":""{0}""";
-		private const string DisplayName = @"""displayName"":""{0}""";
-		private const string PackageVersion = @"""version"":""{0}""";
-		private const string UnityVersion = @"""unity"":""{0}""";
-		private const string Description = @"""description"":""{0}""";
-		private const string Keywords = @"""keywords"":";
-		private const string KeywordChild = @"""{0}""";
-		private const string Dependencies = @"""dependencies"":";
-		private const string DependencyChildFormat = @"""{0}"":""{1}""";
-		private const string Category = @"""category"":""{0}""";
+		private const string NAME = @"""name"":""{0}""";
+		private const string DISPLAY_NAME = @"""displayName"":""{0}""";
+		private const string PACKAGE_VERSION = @"""version"":""{0}""";
+		private const string UNITY_VERSION = @"""unity"":""{0}""";
+		private const string DESCRIPTION = @"""description"":""{0}""";
+		private const string KEYWORDS = @"""keywords"":";
+		private const string KEYWORD_CHILD = @"""{0}""";
+		private const string DEPENDENCIES = @"""dependencies"":";
+		private const string DEPENDENCY_CHILD_FORMAT = @"""{0}"":""{1}""";
+		private const string CATEGORY = @"""category"":""{0}""";
 
 		/// <summary>
 		/// Returns a Json <see cref="string"/> representation of the <see cref="PackageManifestConfig"/>
@@ -60,52 +60,52 @@ namespace JCMG.PackageTools.Editor
 		public static string GenerateJson(PackageManifestConfig packageManifest)
 		{
 			// Clear string builder
-			_jsonStringBuilder.Length = 0;
+			JSON_STRING_BUILDER.Length = 0;
 
-			_jsonStringBuilder.Append(OpenBraces);
-			_jsonStringBuilder.AppendFormat(Name, packageManifest.packageName);
-			_jsonStringBuilder.Append(Comma);
-			_jsonStringBuilder.AppendFormat(DisplayName, packageManifest.displayName);
-			_jsonStringBuilder.Append(Comma);
-			_jsonStringBuilder.AppendFormat(PackageVersion, packageManifest.packageVersion);
-			_jsonStringBuilder.Append(Comma);
-			_jsonStringBuilder.AppendFormat(UnityVersion, packageManifest.unityVersion);
-			_jsonStringBuilder.Append(Comma);
-			_jsonStringBuilder.AppendFormat(Description, packageManifest.description);
-			_jsonStringBuilder.Append(Comma);
+			JSON_STRING_BUILDER.Append(OPEN_BRACES);
+			JSON_STRING_BUILDER.AppendFormat(NAME, packageManifest.packageName);
+			JSON_STRING_BUILDER.Append(COMMA);
+			JSON_STRING_BUILDER.AppendFormat(DISPLAY_NAME, packageManifest.displayName);
+			JSON_STRING_BUILDER.Append(COMMA);
+			JSON_STRING_BUILDER.AppendFormat(PACKAGE_VERSION, packageManifest.packageVersion);
+			JSON_STRING_BUILDER.Append(COMMA);
+			JSON_STRING_BUILDER.AppendFormat(UNITY_VERSION, packageManifest.unityVersion);
+			JSON_STRING_BUILDER.Append(COMMA);
+			JSON_STRING_BUILDER.AppendFormat(DESCRIPTION, packageManifest.description);
+			JSON_STRING_BUILDER.Append(COMMA);
 
 			// Add the keywords if any exist.
 			if (packageManifest.keywords != null &&
 			    packageManifest.keywords.Length > 0)
 			{
-				_jsonStringBuilder.Append(Keywords);
-				_jsonStringBuilder.Append(OpenBracket);
+				JSON_STRING_BUILDER.Append(KEYWORDS);
+				JSON_STRING_BUILDER.Append(OPEN_BRACKET);
 
 				for (var i = 0; i < packageManifest.keywords.Length; i++)
 				{
 					var keyword = packageManifest.keywords[i];
 
-					_jsonStringBuilder.AppendFormat(KeywordChild, keyword);
+					JSON_STRING_BUILDER.AppendFormat(KEYWORD_CHILD, keyword);
 
 					if (i != packageManifest.keywords.Length - 1)
 					{
-						_jsonStringBuilder.Append(Comma);
+						JSON_STRING_BUILDER.Append(COMMA);
 					}
 				}
 
-				_jsonStringBuilder.Append(ClosedBracket);
-				_jsonStringBuilder.Append(Comma);
+				JSON_STRING_BUILDER.Append(CLOSED_BRACKET);
+				JSON_STRING_BUILDER.Append(COMMA);
 			}
 
-			_jsonStringBuilder.AppendFormat(Category, packageManifest.category);
+			JSON_STRING_BUILDER.AppendFormat(CATEGORY, packageManifest.category);
 
 			// Add the dependencies block if any exist.
 			if (packageManifest.dependencies != null &&
 			    packageManifest.dependencies.Length > 0)
 			{
-				_jsonStringBuilder.Append(Comma);
-				_jsonStringBuilder.Append(Dependencies);
-				_jsonStringBuilder.Append(OpenBraces);
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.Append(DEPENDENCIES);
+				JSON_STRING_BUILDER.Append(OPEN_BRACES);
 
 				for (var i = 0; i < packageManifest.dependencies.Length; i++)
 				{
@@ -116,23 +116,23 @@ namespace JCMG.PackageTools.Editor
 						continue;
 					}
 
-					_jsonStringBuilder.AppendFormat(
-						DependencyChildFormat,
+					JSON_STRING_BUILDER.AppendFormat(
+						DEPENDENCY_CHILD_FORMAT,
 						dependency.packageName,
 						dependency.packageVersion);
 
 					if (i != packageManifest.dependencies.Length - 1)
 					{
-						_jsonStringBuilder.Append(Comma);
+						JSON_STRING_BUILDER.Append(COMMA);
 					}
 				}
 
-				_jsonStringBuilder.Append(ClosedBraces);
+				JSON_STRING_BUILDER.Append(CLOSED_BRACES);
 			}
 
-			_jsonStringBuilder.Append(ClosedBraces);
+			JSON_STRING_BUILDER.Append(CLOSED_BRACES);
 
-			return _jsonStringBuilder.ToString();
+			return JSON_STRING_BUILDER.ToString();
 		}
 	}
 }
