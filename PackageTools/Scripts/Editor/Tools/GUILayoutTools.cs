@@ -42,7 +42,7 @@ namespace JCMG.PackageTools.Editor
 		{
 			if (GUI.Button(
 				rect,
-				EditorGUIUtility.IconContent(EditorConstants.EditorFolderIcon)))
+				EditorGUIUtility.IconContent(EditorConstants.EDITOR_FOLDER_ICON)))
 			{
 				var currentFolder = string.IsNullOrEmpty(property.stringValue)
 					? string.Empty
@@ -72,7 +72,7 @@ namespace JCMG.PackageTools.Editor
 		{
 			if (GUI.Button(
 				rect,
-				EditorGUIUtility.IconContent(EditorConstants.EditorFileIcon)))
+				EditorGUIUtility.IconContent(EditorConstants.EDITOR_FILE_ICON)))
 			{
 				var currentFile = string.IsNullOrEmpty(property.stringValue)
 					? string.Empty
@@ -100,9 +100,9 @@ namespace JCMG.PackageTools.Editor
 		public static void DrawFolderPickerLayout(SerializedProperty property, string title)
 		{
 			if (GUILayout.Button(
-				EditorGUIUtility.IconContent(EditorConstants.EditorFolderIcon),
-				GUILayout.Width(EditorConstants.FolderPathPickerHeight),
-				GUILayout.Height(EditorConstants.FolderPathPickerHeight)))
+				EditorGUIUtility.IconContent(EditorConstants.EDITOR_FOLDER_ICON),
+				GUILayout.Width(EditorConstants.FOLDER_PATH_PICKER_HEIGHT),
+				GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT)))
 			{
 				var currentFolder = string.IsNullOrEmpty(property.stringValue)
 					? string.Empty

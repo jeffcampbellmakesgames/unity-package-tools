@@ -29,8 +29,8 @@ namespace JCMG.PackageTools.Editor
 	[CustomPropertyDrawer(typeof(PackageManifestConfig.Dependency))]
 	internal sealed class DependencyPropertyDrawer : PropertyDrawer
 	{
-		private const string PackageNamePropertyName = "packageName";
-		private const string PackageVersionPropertyName = "packageVersion";
+		private const string PACKAGE_NAME_PROPERTY_NAME = "packageName";
+		private const string PACKAGE_VERSION_PROPERTY_NAME = "packageVersion";
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
@@ -44,8 +44,8 @@ namespace JCMG.PackageTools.Editor
 				position = new Vector2(position.x, packageRect.y + packageRect.height)
 			};
 
-			EditorGUI.PropertyField(packageRect, property.FindPropertyRelative(PackageNamePropertyName));
-			EditorGUI.PropertyField(packageVersionRect, property.FindPropertyRelative(PackageVersionPropertyName));
+			EditorGUI.PropertyField(packageRect, property.FindPropertyRelative(PACKAGE_NAME_PROPERTY_NAME));
+			EditorGUI.PropertyField(packageVersionRect, property.FindPropertyRelative(PACKAGE_VERSION_PROPERTY_NAME));
 		}
 
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
