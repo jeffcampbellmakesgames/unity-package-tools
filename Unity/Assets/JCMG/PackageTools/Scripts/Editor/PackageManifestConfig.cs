@@ -133,8 +133,8 @@ namespace JCMG.PackageTools.Editor
 
 		private void Reset()
 		{
-			packageVersion = EditorConstants.DefaultPackageVersion;
-			unityVersion = EditorConstants.DefaultUnityVersion;
+			packageVersion = EditorConstants.DEFAULT_PACKAGE_VERSION;
+			unityVersion = EditorConstants.DEFAULT_UNITY_VERSION;
 			_id = Guid.NewGuid().ToString();
 		}
 	}

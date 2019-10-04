@@ -56,7 +56,7 @@ namespace JCMG.PackageTools.Editor
 		public static void CreateOrUpdatePackageSource(PackageManifestConfig packageManifest)
 		{
 			#if UNITY_EDITOR
-			EditorUtility.DisplayProgressBar(EditorConstants.ProgressBarTitle, string.Empty, 0f);
+			EditorUtility.DisplayProgressBar(EditorConstants.PROGRESS_BAR_TITLE, string.Empty, 0f);
 			#endif
 
 			try
@@ -67,8 +67,8 @@ namespace JCMG.PackageTools.Editor
 				var packageManifestAssetPath = AssetDatabase.GetAssetPath(packageManifest);
 				var parentManifestParentFolderAssetPath = packageManifestAssetPath
 					.Replace(packageManifest.name, string.Empty)
-					.Replace(EditorConstants.AssetExtension, string.Empty);
-				var generatedFolderAssetPath = Path.Combine(parentManifestParentFolderAssetPath, EditorConstants.GeneratedFolderName);
+					.Replace(EditorConstants.ASSET_EXTENSION, string.Empty);
+				var generatedFolderAssetPath = Path.Combine(parentManifestParentFolderAssetPath, EditorConstants.GENERATED_FOLDER_NAME);
 				var fullGeneratedFolderAssetPath = Path.GetFullPath(generatedFolderAssetPath);
 
 				if (!Directory.Exists(fullGeneratedFolderAssetPath))
@@ -83,7 +83,7 @@ namespace JCMG.PackageTools.Editor
 					Directory.CreateDirectory(fullPackageJsonFolderAssetPath);
 				}
 
-				var packageJsonAssetPath = Path.Combine(packageJsonFolderAssetPath, EditorConstants.PackageJsonFilename);
+				var packageJsonAssetPath = Path.Combine(packageJsonFolderAssetPath, EditorConstants.PACKAGE_JSON_FILENAME);
 				var fullPackageJsonAssetPath = Path.GetFullPath(packageJsonAssetPath);
 
 				File.WriteAllText(fullPackageJsonAssetPath, packageManifest.GenerateJson());
@@ -101,14 +101,14 @@ namespace JCMG.PackageTools.Editor
 
 				// Copy over the package json and meta file
 				var destinationPackageJsonPath =
-					Path.Combine(packageManifest.packageDestinationPath, EditorConstants.PackageJsonFilename);
+					Path.Combine(packageManifest.packageDestinationPath, EditorConstants.PACKAGE_JSON_FILENAME);
 				File.Copy(fullPackageJsonAssetPath, destinationPackageJsonPath);
 
-				var packageJsonMetaPath = string.Format(EditorConstants.MetaFormat, fullPackageJsonAssetPath);
+				var packageJsonMetaPath = string.Format(EditorConstants.META_FORMAT, fullPackageJsonAssetPath);
 
 				File.Copy(packageJsonMetaPath,
 					Path.Combine(packageManifest.packageDestinationPath,
-						string.Format(EditorConstants.MetaFormat, EditorConstants.PackageJsonFilename)));
+						string.Format(EditorConstants.META_FORMAT, EditorConstants.PACKAGE_JSON_FILENAME)));
 
 				// Copy over all directory and file content from source to destination.
 				var normalizedDestinationPath = Path.GetFullPath(packageManifest.packageDestinationPath);
@@ -129,7 +129,7 @@ namespace JCMG.PackageTools.Editor
 
 						File.Copy(normalizedSourcePath, newPath);
 
-						var sourceMetaPath = string.Format(EditorConstants.MetaFormat, normalizedSourcePath);
+						var sourceMetaPath = string.Format(EditorConstants.META_FORMAT, normalizedSourcePath);
 						if (File.Exists(sourceMetaPath))
 						{
 							var newMetaPath = sourceMetaPath.Replace(parentDirectoryPath, normalizedDestinationPath);
@@ -147,7 +147,7 @@ namespace JCMG.PackageTools.Editor
 					}
 				}
 
-				Debug.LogFormat(EditorConstants.PackageUpdateSuccessFormat, packageManifest.packageName);
+				Debug.LogFormat(EditorConstants.PACKAGE_UPDATE_SUCCESS_FORMAT, packageManifest.packageName);
 
 				#if UNITY_EDITOR
 				EditorUtility.RevealInFinder(destinationPackageJsonPath);
@@ -155,13 +155,13 @@ namespace JCMG.PackageTools.Editor
 			}
 			catch (Exception ex)
 			{
-				Debug.LogErrorFormat(EditorConstants.PackageUpdateErrorFormat, packageManifest.packageName);
+				Debug.LogErrorFormat(EditorConstants.PACKAGE_UPDATE_ERROR_FORMAT, packageManifest.packageName);
 				Debug.LogErrorFormat(packageManifest, ex.ToString());
 			}
 			finally
 			{
 				#if UNITY_EDITOR
-				EditorUtility.DisplayProgressBar(EditorConstants.ProgressBarTitle, string.Empty, 1f);
+				EditorUtility.DisplayProgressBar(EditorConstants.PROGRESS_BAR_TITLE, string.Empty, 1f);
 				EditorUtility.ClearProgressBar();
 				#endif
 			}
@@ -194,12 +194,12 @@ namespace JCMG.PackageTools.Editor
 		{
 			var normalizedSourcePath = Path.GetFullPath(sourcePath);
 			var normalizedDestinationPath = Path.GetFullPath(destinationPath);
-			var subDirectoryInfo = directoryInfo.GetDirectories(EditorConstants.WildcardFilter);
+			var subDirectoryInfo = directoryInfo.GetDirectories(EditorConstants.WILDCARD_FILTER);
 			foreach (var sdi in subDirectoryInfo)
 			{
 				// If any of the paths we're looking at match the ignore paths from the user, skip them
 				if (packageManifest.packageIgnorePaths.Any(x =>
-					sdi.FullName.Contains(Path.GetFullPath(Path.Combine(EditorConstants.ProjectPath, x)))))
+					sdi.FullName.Contains(Path.GetFullPath(Path.Combine(EditorConstants.PROJECT_PATH, x)))))
 				{
 					continue;
 				}
@@ -209,12 +209,12 @@ namespace JCMG.PackageTools.Editor
 				RecursivelyCopyDirectoriesAndFiles(packageManifest, sdi, normalizedSourcePath, normalizedDestinationPath);
 			}
 
-			var fileInfo = directoryInfo.GetFiles(EditorConstants.WildcardFilter);
+			var fileInfo = directoryInfo.GetFiles(EditorConstants.WILDCARD_FILTER);
 			foreach (var fi in fileInfo)
 			{
 				// If any of the paths we're looking at match the ignore paths from the user, skip them
 				if (packageManifest.packageIgnorePaths.Any(x =>
-					fi.FullName.Contains(Path.GetFullPath(Path.Combine(EditorConstants.ProjectPath, x)))))
+					fi.FullName.Contains(Path.GetFullPath(Path.Combine(EditorConstants.PROJECT_PATH, x)))))
 				{
 					continue;
 				}
@@ -231,7 +231,7 @@ namespace JCMG.PackageTools.Editor
 		/// <param name="directoryInfo"></param>
 		private static void RecursivelyDeleteDirectoryContents(DirectoryInfo directoryInfo)
 		{
-			var subDirectoryInfo = directoryInfo.GetDirectories(EditorConstants.WildcardFilter);
+			var subDirectoryInfo = directoryInfo.GetDirectories(EditorConstants.WILDCARD_FILTER);
 			foreach (var sdi in subDirectoryInfo)
 			{
 				if ((sdi.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
@@ -240,7 +240,7 @@ namespace JCMG.PackageTools.Editor
 				}
 			}
 
-			var fileInfo = directoryInfo.GetFiles(EditorConstants.WildcardFilter);
+			var fileInfo = directoryInfo.GetFiles(EditorConstants.WILDCARD_FILTER);
 			foreach (var fi in fileInfo)
 			{
 				fi.Delete();
@@ -259,12 +259,12 @@ namespace JCMG.PackageTools.Editor
 			var fullPath = Path.GetFullPath(folderPath);
 			filePaths.AddRange(Directory.GetFiles(
 				fullPath,
-				EditorConstants.WildcardFilter,
+				EditorConstants.WILDCARD_FILTER,
 				SearchOption.AllDirectories));
 
 			filePaths.AddRange(Directory.GetDirectories(
 				folderPath,
-				EditorConstants.WildcardFilter,
+				EditorConstants.WILDCARD_FILTER,
 				SearchOption.AllDirectories));
 
 			return filePaths.Distinct().OrderBy(x => x);
