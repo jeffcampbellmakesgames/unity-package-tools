@@ -56,7 +56,7 @@ namespace JCMG.PackageTools.Editor.Tests
 			};
 		}
 
-		private const string ExpectedJson =
+		private const string EXPECTED_JSON =
 			"{\"name\":\"com.unity.package-4\",\"displayName\":\"Package Number 4\",\"version\":\"2.5.1\"," +
 			"\"unity\":\"2018.1\",\"description\":\"This package provides X, Y, and Z. \n\nTo find out more," +
 			" click the \"View Documentation\" link.\",\"keywords\":[\"key X\",\"key Y\",\"key Z\"]," +
@@ -68,7 +68,7 @@ namespace JCMG.PackageTools.Editor.Tests
 		{
 			var json = _packageManifest.GenerateJson();
 
-			Assert.AreEqual(ExpectedJson, json);
+			Assert.AreEqual(EXPECTED_JSON, json);
 		}
 	}
 }

@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   packageSourcePaths:
   - Assets/JCMG
-  packageIgnorePaths: []
+  packageIgnorePaths:
+  - Assets/JCMG/PackageTools/Scripts/Editor/Tests
   packageDestinationPath: ../../unity-package-tools_release
+  legacyPackageDestinationPath: ../Builds
   packageName: com.jeffcampbellmakesgames.packagetools
   displayName: JCMG Package Tools
-  packageVersion: 1.1.0
+  packageVersion: 1.2.0
   unityVersion: 2018.1
   description: Contains a set of Unity development tools to help support exporting
     and/or updating package contents. \n\nFor more information, see https://github.com/jeffcampbellmakesgames/unity-package-tools

@@ -32,7 +32,7 @@ There is an `.editorconfig` at the root of the repository located [here](/.edito
 | Properties | PascalCase | `Value` |
 | Public fields | camelCase | `value` |
 | Private fields | _camelCase | `_value` |
-| Constants | PascalCase | `DefaultVersion` |
+| Constants | PascalCase | `DEFAULT_VERSION` |
 | Inline variables | camelCase | `value` |
 
 ### Structure
@@ -77,7 +77,7 @@ namespace Example
         [SerializeField]
         private int _someValue;
 
-        private const string Warning = "Somethings wrong!";
+        private const string WARNING = "Somethings wrong!";
 
         private void Update()
         {
