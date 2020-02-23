@@ -1,4 +1,5 @@
 # <img src="./Documentation/PackageManifestConfigIcon.png" alt="" width="35" height="35"/> JCMG Package Tools
+[![openupm](https://img.shields.io/npm/v/com.jeffcampbellmakesgames.packagetools?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.jeffcampbellmakesgames.packagetools/)
 
 ## Overview
 Unity package tools is a set of Unity Editor tools that make it easier for developer to share their own tools, plugins, etc... as packages that other users can then import via the native Unity Package Manager. It does this by:
@@ -8,10 +9,18 @@ Unity package tools is a set of Unity Editor tools that make it easier for devel
 
 ![Package Manifest Config Inspector](./Documentation/Inspector.png)
 
-## Importing JCMG Package Tools
-Using this library in your project can be done in two ways:
-* **Releases:** The latest release can be found [here](https://github.com/jeffcampbellmakesgames/unity-package-tools/releases) as a UnityPackage file that can be downloaded and imported directly into your project's Assets folder.
-* **Package:** Using the native Unity Package Manager introduced in 2017.2, you can add this library as a package by modifying your `manifest.json` file found at `/ProjectName/Packages/manifest.json` to include it as a dependency. See the example below on how to reference it.
+## Installing JCMG Package Tools
+Using this library in your project can be done in three ways:
+
+### Install via OpenUPM
+The package is available on the [openupm registry](https://openupm.com/). It's recommended to install it via [openupm-cli](https://github.com/openupm/openupm-cli).
+
+```
+openupm add com.jeffcampbellmakesgames.packagetools
+```
+
+### Install via GIT URL
+Using the native Unity Package Manager introduced in 2017.2, you can add this library as a package by modifying your `manifest.json` file found at `/ProjectName/Packages/manifest.json` to include it as a dependency. See the example below on how to reference it.
 
 ```
 {
@@ -22,6 +31,9 @@ Using this library in your project can be done in two ways:
 	}
 }
 ```
+
+### Install via classic `.UnityPackage`
+The latest release can be found [here](https://github.com/jeffcampbellmakesgames/unity-package-tools/releases) as a UnityPackage file that can be downloaded and imported directly into your project's Assets folder.
 
 ## Usage
 To learn more about how to use JCMG Package Tools, see [here](./usage.md) for more information.
