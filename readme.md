@@ -1,5 +1,8 @@
 # <img src="./Documentation/PackageManifestConfigIcon.png" alt="" width="35" height="35"/> JCMG Package Tools
 [![openupm](https://img.shields.io/npm/v/com.jeffcampbellmakesgames.packagetools?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.jeffcampbellmakesgames.packagetools/)
+<img alt="GitHub issues" src="https://img.shields.io/github/issues/jeffcampbellmakesgames/unity-package-tools">
+<img alt="GitHub" src="https://img.shields.io/github/license/jeffcampbellmakesgames/unity-package-tools">
+[![Twitter Follow](https://img.shields.io/badge/twitter-%40stampyturtle-blue.svg?style=flat&label=Follow)](https://twitter.com/stampyturtle)
 
 ## Overview
 Unity package tools is a set of Unity Editor tools that make it easier for developer to share their own tools, plugins, etc... as packages that other users can then import via the native Unity Package Manager. It does this by:
