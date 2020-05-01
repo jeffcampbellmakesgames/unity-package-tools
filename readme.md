@@ -9,6 +9,7 @@ Unity package tools is a set of Unity Editor tools that make it easier for devel
 
 * Providing one-button click functionality for copying the relevant source folders/files to a prescribed package export location.
 * Automate creating and updating the package manager Json file.
+* Generating a helper class describing versioning information about your package for inclusion with its contents.
 
 ![Package Manifest Config Inspector](./Documentation/Inspector.png)
 
