@@ -54,10 +54,7 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// A unique id for this <see cref="PackageManifestConfig"/> instance.
 		/// </summary>
-		public string Id
-		{
-			get { return _id; }
-		}
+		public string Id => _id;
 
 		/// <summary>
 		/// A collection of paths to folders and files for the source for the package.
@@ -118,6 +115,17 @@ namespace JCMG.PackageTools.Editor
 		/// A collection of packages that this package depends on.
 		/// </summary>
 		public Dependency[] dependencies;
+
+		/// <summary>
+		/// A path to the where the VersionConstants.cs file should be created/updated
+		/// </summary>
+		public string versionConstantsPath;
+
+		/// <summary>
+		/// The namespace the generated VersionConstants class will be in. If left blank, this will be
+		/// the global namespace.
+		/// </summary>
+		public string versionConstantsNamespace;
 
 		[SerializeField]
 		private string _id;
