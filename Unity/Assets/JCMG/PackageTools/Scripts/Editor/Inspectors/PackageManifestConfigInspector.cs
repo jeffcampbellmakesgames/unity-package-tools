@@ -47,6 +47,8 @@ namespace JCMG.PackageTools.Editor
 		private const string CATEGORY_PROPERTY_NAME = "category";
 		private const string KEYWORDS_PROPERTY_NAME = "keywords";
 		private const string DEPENDENCIES_PROPERTY_NAME = "dependencies";
+		private const string VERSION_CONSTANTS_PATH_PROPERTY_NAME = "versionConstantsPath";
+		private const string VERSION_CONSTANTS_NAMESPACE_PROPERTY_NAME = "versionConstantsNamespace";
 		private const string ID_PROPERTY_NAME = "_id";
 
 		private void OnEnable()
@@ -90,6 +92,8 @@ namespace JCMG.PackageTools.Editor
 
 		public override void OnInspectorGUI()
 		{
+			var config = (PackageManifestConfig)target;
+
 			using (var scope = new EditorGUI.ChangeCheckScope())
 			{
 				EditorGUILayout.LabelField(EditorConstants.PACKAGE_JSON_HEADER, EditorStyles.boldLabel);
@@ -138,6 +142,30 @@ namespace JCMG.PackageTools.Editor
 						EditorConstants.SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE);
 				}
 
+				// Version Constants Export
+				using (new EditorGUILayout.VerticalScope(EditorConstants.GROUP_BOX))
+				{
+					// Namespace
+					var namespaceProperty = serializedObject.FindProperty(VERSION_CONSTANTS_NAMESPACE_PROPERTY_NAME);
+					EditorGUILayout.PropertyField(namespaceProperty);
+					if (string.IsNullOrEmpty(namespaceProperty.stringValue))
+					{
+						EditorGUILayout.HelpBox(EditorConstants.GLOBAL_NAMESPACE_WARNING, MessageType.Info);
+					}
+
+					// Output folder
+					using (new EditorGUILayout.HorizontalScope())
+					{
+						var versionConstantsPathProperty = serializedObject.FindProperty(VERSION_CONSTANTS_PATH_PROPERTY_NAME);
+						EditorGUILayout.PropertyField(
+							versionConstantsPathProperty,
+							GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
+						GUILayoutTools.DrawFolderPickerLayout(
+							versionConstantsPathProperty,
+							EditorConstants.SELECT_VERSION_CONSTANTS_PATH_PICKER_TITLE);
+					}
+				}
+
 				if(scope.changed)
 				{
 					serializedObject.ApplyModifiedProperties();
@@ -147,14 +175,21 @@ namespace JCMG.PackageTools.Editor
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField(EditorConstants.PACKAGE_ACTIONS_HEADER, EditorStyles.boldLabel);
 
+			if (GUILayout.Button(new GUIContent(
+				EditorConstants.GENERATE_VERSION_CONSTANTS_BUTTON_TEXT,
+				EditorConstants.GENERATE_VERSION_CONSTANTS_TOOLTIP)))
+			{
+				CodeGenTools.GenerateVersionConstants(config);
+			}
+
 			if (GUILayout.Button(EditorConstants.UPDATE_PACKAGE_BUTTON_TEXT))
 			{
-				FileTools.CreateOrUpdatePackageSource((PackageManifestConfig)target);
+				FileTools.CreateOrUpdatePackageSource(config);
 			}
 
 			if (GUILayout.Button(EditorConstants.EXPORT_LEGACY_PACKAGE_BUTTON_TEXT))
 			{
-				UnityFileTools.CompileLegacyPackage((PackageManifestConfig)target);
+				UnityFileTools.CompileLegacyPackage(config);
 			}
 		}
 
