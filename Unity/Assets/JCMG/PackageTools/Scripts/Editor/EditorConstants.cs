@@ -46,6 +46,14 @@ namespace JCMG.PackageTools.Editor
 		public static readonly string PROJECT_PATH =
 			Application.dataPath.Remove(Application.dataPath.Length - 6, 6);
 
+
+		// Editor Styles
+		public const string GROUP_BOX = "GroupBox";
+
+		// Warnings
+		public const string GLOBAL_NAMESPACE_WARNING = "A blank namespace will result in the VersionConstants class " +
+		                                               "being put into the global namespace.";
+
 		// Icons
 		public const string EDITOR_FOLDER_ICON = "Folder Icon";
 		public const string EDITOR_FILE_ICON = "TextAsset Icon";
@@ -66,12 +74,18 @@ namespace JCMG.PackageTools.Editor
 		public const string DEPENDENCY_HEADER_LABEL = "Dependencies";
 		public const string DEPENDENCY_ELEMENT_LABEL_FORMAT = "Dependency {0}:";
 
+		public const string GENERATE_VERSION_CONSTANTS_BUTTON_TEXT = "Generate VersionConstants.cs";
+		public const string GENERATE_VERSION_CONSTANTS_TOOLTIP = "If an output path is specified, a [VersionConstants.cs] file " +
+		                                                         "will be created containing descriptive information about the " +
+		                                                         "package. This can be output to an Runtime or Editor folder.";
+
 		public const string UPDATE_PACKAGE_BUTTON_TEXT = "Export Package Source";
 		public const string EXPORT_LEGACY_PACKAGE_BUTTON_TEXT = "Export as Legacy Package";
 
 		public const string SELECT_SOURCE_PATH_FILE_PICKER_TITLE = "Select Source Asset Path";
 		public const string SELECT_SOURCE_PATH_PICKER_FOLDER_TITLE = "Select Source Folder Path";
 		public const string SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE = "Select Package Export Folder";
+		public const string SELECT_VERSION_CONSTANTS_PATH_PICKER_TITLE = "Select Version Constants Output Folder";
 		public const string PROGRESS_BAR_TITLE = "Exporting Package Source";
 		public const string PROGRESS_BAR_TITLE_LEGACY = "Exporting Legacy Package";
 		public const string COMPILING_PROGRESS_MESSAGE = "Compiling legacy package contents...";

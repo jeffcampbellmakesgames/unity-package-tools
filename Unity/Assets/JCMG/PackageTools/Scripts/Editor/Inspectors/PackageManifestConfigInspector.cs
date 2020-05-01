@@ -47,6 +47,8 @@ namespace JCMG.PackageTools.Editor
 		private const string CATEGORY_PROPERTY_NAME = "category";
 		private const string KEYWORDS_PROPERTY_NAME = "keywords";
 		private const string DEPENDENCIES_PROPERTY_NAME = "dependencies";
+		private const string VERSION_CONSTANTS_PATH_PROPERTY_NAME = "versionConstantsPath";
+		private const string VERSION_CONSTANTS_NAMESPACE_PROPERTY_NAME = "versionConstantsNamespace";
 		private const string ID_PROPERTY_NAME = "_id";
 
 		private void OnEnable()
@@ -90,71 +92,104 @@ namespace JCMG.PackageTools.Editor
 
 		public override void OnInspectorGUI()
 		{
-			EditorGUI.BeginChangeCheck();
+			var config = (PackageManifestConfig)target;
 
-			EditorGUILayout.LabelField(EditorConstants.PACKAGE_JSON_HEADER, EditorStyles.boldLabel);
-			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(ID_PROPERTY_NAME));
-			EditorGUI.EndDisabledGroup();
-
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(NAME_PROPERTY_NAME));
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(DISPLAY_NAME_PROPERTY));
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(PACKAGE_VERSION_PROPERTY_NAME));
-
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(UNITY_VERSION_PROPERTY_NAME));
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(DESCRIPTION_PROPERTY_NAME));
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(CATEGORY_PROPERTY_NAME));
-
-			_keywordReorderableList.DoLayoutList();
-			_dependenciesReorderableList.DoLayoutList();
-
-			EditorGUILayout.Space();
-			EditorGUILayout.LabelField(EditorConstants.PACKAGE_CONTENT_HEADER, EditorStyles.boldLabel);
-
-			_sourcePathsReorderableList.DoLayoutList();
-			_excludePathsReorderableList.DoLayoutList();
-
-			// Package Source Export
-			EditorGUILayout.BeginHorizontal();
-			var destinationPathProperty = serializedObject.FindProperty(DESTINATION_PATH_PROPERTY_NAME);
-			EditorGUILayout.PropertyField(
-				destinationPathProperty,
-				GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
-			GUILayoutTools.DrawFolderPickerLayout(
-				destinationPathProperty,
-				EditorConstants.SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE);
-			EditorGUILayout.EndHorizontal();
-
-			// Legacy Package Export
-			EditorGUILayout.BeginHorizontal();
-			var legacyPackagePathProperty = serializedObject.FindProperty(LEGACY_PACKAGE_PATH_PROPERTY_NAME);
-			EditorGUILayout.PropertyField(
-				legacyPackagePathProperty,
-				GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
-			GUILayoutTools.DrawFolderPickerLayout(
-				legacyPackagePathProperty,
-				EditorConstants.SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE);
-			EditorGUILayout.EndHorizontal();
-
-			if (EditorGUI.EndChangeCheck())
+			using (var scope = new EditorGUI.ChangeCheckScope())
 			{
-				serializedObject.ApplyModifiedProperties();
+				EditorGUILayout.LabelField(EditorConstants.PACKAGE_JSON_HEADER, EditorStyles.boldLabel);
+				using (new EditorGUI.DisabledScope(true))
+				{
+					EditorGUILayout.PropertyField(serializedObject.FindProperty(ID_PROPERTY_NAME));
+				}
+
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(NAME_PROPERTY_NAME));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(DISPLAY_NAME_PROPERTY));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(PACKAGE_VERSION_PROPERTY_NAME));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(UNITY_VERSION_PROPERTY_NAME));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(DESCRIPTION_PROPERTY_NAME));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(CATEGORY_PROPERTY_NAME));
+
+				_keywordReorderableList.DoLayoutList();
+				_dependenciesReorderableList.DoLayoutList();
+
+				EditorGUILayout.Space();
+				EditorGUILayout.LabelField(EditorConstants.PACKAGE_CONTENT_HEADER, EditorStyles.boldLabel);
+
+				_sourcePathsReorderableList.DoLayoutList();
+				_excludePathsReorderableList.DoLayoutList();
+
+				// Package Source Export
+				using (new EditorGUILayout.HorizontalScope())
+				{
+					var destinationPathProperty = serializedObject.FindProperty(DESTINATION_PATH_PROPERTY_NAME);
+					EditorGUILayout.PropertyField(
+						destinationPathProperty,
+						GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
+					GUILayoutTools.DrawFolderPickerLayout(
+						destinationPathProperty,
+						EditorConstants.SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE);
+				}
+
+				// Legacy Package Export
+				using (new EditorGUILayout.HorizontalScope())
+				{
+					var legacyPackagePathProperty = serializedObject.FindProperty(LEGACY_PACKAGE_PATH_PROPERTY_NAME);
+					EditorGUILayout.PropertyField(
+						legacyPackagePathProperty,
+						GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
+					GUILayoutTools.DrawFolderPickerLayout(
+						legacyPackagePathProperty,
+						EditorConstants.SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE);
+				}
+
+				// Version Constants Export
+				using (new EditorGUILayout.VerticalScope(EditorConstants.GROUP_BOX))
+				{
+					// Namespace
+					var namespaceProperty = serializedObject.FindProperty(VERSION_CONSTANTS_NAMESPACE_PROPERTY_NAME);
+					EditorGUILayout.PropertyField(namespaceProperty);
+					if (string.IsNullOrEmpty(namespaceProperty.stringValue))
+					{
+						EditorGUILayout.HelpBox(EditorConstants.GLOBAL_NAMESPACE_WARNING, MessageType.Info);
+					}
+
+					// Output folder
+					using (new EditorGUILayout.HorizontalScope())
+					{
+						var versionConstantsPathProperty = serializedObject.FindProperty(VERSION_CONSTANTS_PATH_PROPERTY_NAME);
+						EditorGUILayout.PropertyField(
+							versionConstantsPathProperty,
+							GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
+						GUILayoutTools.DrawFolderPickerLayout(
+							versionConstantsPathProperty,
+							EditorConstants.SELECT_VERSION_CONSTANTS_PATH_PICKER_TITLE);
+					}
+				}
+
+				if(scope.changed)
+				{
+					serializedObject.ApplyModifiedProperties();
+				}
 			}
 
 			EditorGUILayout.Space();
 			EditorGUILayout.LabelField(EditorConstants.PACKAGE_ACTIONS_HEADER, EditorStyles.boldLabel);
 
+			if (GUILayout.Button(new GUIContent(
+				EditorConstants.GENERATE_VERSION_CONSTANTS_BUTTON_TEXT,
+				EditorConstants.GENERATE_VERSION_CONSTANTS_TOOLTIP)))
+			{
+				CodeGenTools.GenerateVersionConstants(config);
+			}
+
 			if (GUILayout.Button(EditorConstants.UPDATE_PACKAGE_BUTTON_TEXT))
 			{
-				FileTools.CreateOrUpdatePackageSource((PackageManifestConfig)target);
+				FileTools.CreateOrUpdatePackageSource(config);
 			}
 
 			if (GUILayout.Button(EditorConstants.EXPORT_LEGACY_PACKAGE_BUTTON_TEXT))
 			{
-				UnityFileTools.CompileLegacyPackage((PackageManifestConfig)target);
+				UnityFileTools.CompileLegacyPackage(config);
 			}
 		}
 
