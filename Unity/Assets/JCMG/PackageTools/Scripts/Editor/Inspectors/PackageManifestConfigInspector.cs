@@ -90,58 +90,58 @@ namespace JCMG.PackageTools.Editor
 
 		public override void OnInspectorGUI()
 		{
-			EditorGUI.BeginChangeCheck();
-
-			EditorGUILayout.LabelField(EditorConstants.PACKAGE_JSON_HEADER, EditorStyles.boldLabel);
-			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(ID_PROPERTY_NAME));
-			EditorGUI.EndDisabledGroup();
-
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(NAME_PROPERTY_NAME));
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(DISPLAY_NAME_PROPERTY));
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(PACKAGE_VERSION_PROPERTY_NAME));
-
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(UNITY_VERSION_PROPERTY_NAME));
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(DESCRIPTION_PROPERTY_NAME));
-			EditorGUILayout.PropertyField(serializedObject.FindProperty(CATEGORY_PROPERTY_NAME));
-
-			_keywordReorderableList.DoLayoutList();
-			_dependenciesReorderableList.DoLayoutList();
-
-			EditorGUILayout.Space();
-			EditorGUILayout.LabelField(EditorConstants.PACKAGE_CONTENT_HEADER, EditorStyles.boldLabel);
-
-			_sourcePathsReorderableList.DoLayoutList();
-			_excludePathsReorderableList.DoLayoutList();
-
-			// Package Source Export
-			EditorGUILayout.BeginHorizontal();
-			var destinationPathProperty = serializedObject.FindProperty(DESTINATION_PATH_PROPERTY_NAME);
-			EditorGUILayout.PropertyField(
-				destinationPathProperty,
-				GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
-			GUILayoutTools.DrawFolderPickerLayout(
-				destinationPathProperty,
-				EditorConstants.SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE);
-			EditorGUILayout.EndHorizontal();
-
-			// Legacy Package Export
-			EditorGUILayout.BeginHorizontal();
-			var legacyPackagePathProperty = serializedObject.FindProperty(LEGACY_PACKAGE_PATH_PROPERTY_NAME);
-			EditorGUILayout.PropertyField(
-				legacyPackagePathProperty,
-				GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
-			GUILayoutTools.DrawFolderPickerLayout(
-				legacyPackagePathProperty,
-				EditorConstants.SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE);
-			EditorGUILayout.EndHorizontal();
-
-			if (EditorGUI.EndChangeCheck())
+			using (var scope = new EditorGUI.ChangeCheckScope())
 			{
-				serializedObject.ApplyModifiedProperties();
+				EditorGUILayout.LabelField(EditorConstants.PACKAGE_JSON_HEADER, EditorStyles.boldLabel);
+				using (new EditorGUI.DisabledScope(true))
+				{
+					EditorGUILayout.PropertyField(serializedObject.FindProperty(ID_PROPERTY_NAME));
+				}
+
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(NAME_PROPERTY_NAME));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(DISPLAY_NAME_PROPERTY));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(PACKAGE_VERSION_PROPERTY_NAME));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(UNITY_VERSION_PROPERTY_NAME));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(DESCRIPTION_PROPERTY_NAME));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(CATEGORY_PROPERTY_NAME));
+
+				_keywordReorderableList.DoLayoutList();
+				_dependenciesReorderableList.DoLayoutList();
+
+				EditorGUILayout.Space();
+				EditorGUILayout.LabelField(EditorConstants.PACKAGE_CONTENT_HEADER, EditorStyles.boldLabel);
+
+				_sourcePathsReorderableList.DoLayoutList();
+				_excludePathsReorderableList.DoLayoutList();
+
+				// Package Source Export
+				using (new EditorGUILayout.HorizontalScope())
+				{
+					var destinationPathProperty = serializedObject.FindProperty(DESTINATION_PATH_PROPERTY_NAME);
+					EditorGUILayout.PropertyField(
+						destinationPathProperty,
+						GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
+					GUILayoutTools.DrawFolderPickerLayout(
+						destinationPathProperty,
+						EditorConstants.SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE);
+				}
+
+				// Legacy Package Export
+				using (new EditorGUILayout.HorizontalScope())
+				{
+					var legacyPackagePathProperty = serializedObject.FindProperty(LEGACY_PACKAGE_PATH_PROPERTY_NAME);
+					EditorGUILayout.PropertyField(
+						legacyPackagePathProperty,
+						GUILayout.Height(EditorConstants.FOLDER_PATH_PICKER_HEIGHT));
+					GUILayoutTools.DrawFolderPickerLayout(
+						legacyPackagePathProperty,
+						EditorConstants.SELECT_PACKAGE_EXPORT_PATH_PICKER_TITLE);
+				}
+
+				if(scope.changed)
+				{
+					serializedObject.ApplyModifiedProperties();
+				}
 			}
 
 			EditorGUILayout.Space();
