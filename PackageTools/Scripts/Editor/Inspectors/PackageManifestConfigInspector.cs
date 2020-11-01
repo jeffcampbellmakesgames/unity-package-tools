@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -48,6 +47,7 @@ namespace JCMG.PackageTools.Editor
 		private const string CATEGORY_PROPERTY_NAME = "category";
 		private const string KEYWORDS_PROPERTY_NAME = "keywords";
 		private const string DEPENDENCIES_PROPERTY_NAME = "dependencies";
+		private const string AUTHOR_PROPERTY_NAME = "author";
 		private const string VERSION_CONSTANTS_PATH_PROPERTY_NAME = "versionConstantsPath";
 		private const string VERSION_CONSTANTS_NAMESPACE_PROPERTY_NAME = "versionConstantsNamespace";
 		private const string ID_PROPERTY_NAME = "_id";
@@ -109,6 +109,7 @@ namespace JCMG.PackageTools.Editor
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(UNITY_VERSION_PROPERTY_NAME));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(DESCRIPTION_PROPERTY_NAME));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(CATEGORY_PROPERTY_NAME));
+				EditorGUILayout.PropertyField(serializedObject.FindProperty(AUTHOR_PROPERTY_NAME));
 
 				_keywordReorderableList.DoLayoutList();
 				_dependenciesReorderableList.DoLayoutList();

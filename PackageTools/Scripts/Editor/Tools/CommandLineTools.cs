@@ -21,45 +21,47 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-using System.Diagnostics;
-using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 namespace JCMG.PackageTools.Editor
 {
 	/// <summary>
-	/// Helper methods for retrieving git information
+	/// Helper methods for command-line usage
 	/// </summary>
-	public static class GitTools
+	public static class CommandLineTools
 	{
-		private const string GIT_APPLICATION = "git";
+		// Command-Line Delimiters
+		private const string ARGUMENT_DELIMITER_STR = "=";
+		private const char ARGUMENT_DELIMITER_CHAR = '=';
 
-		public static string Run(string cmd)
+		/// <summary>
+		/// Returns a more easily-searchable <see cref="Dictionary{TKey,TValue}"/> of command-line arguments.
+		/// </summary>
+		/// <returns></returns>
+		public static Dictionary<string, object> GetKVPCommandLineArguments()
 		{
-			// NOTE: This currently expects that you have git included in your PATH.
-			var p = new Process();
-			p.StartInfo.FileName = GIT_APPLICATION;
-			p.StartInfo.Arguments = cmd;
-			p.StartInfo.WorkingDirectory = Application.dataPath;
-			p.StartInfo.CreateNoWindow = true;
-			p.StartInfo.RedirectStandardOutput = true;
-			p.StartInfo.UseShellExecute = false;
-			p.Start();
+			var dict = new Dictionary<string, object>();
+			var arguments = Environment.GetCommandLineArgs();
+			foreach (var argument in arguments)
+			{
+				// If the commandline argument contains a value, parse that and add it
+				if (argument.Contains(ARGUMENT_DELIMITER_STR))
+				{
+					var array = argument.Split(ARGUMENT_DELIMITER_CHAR);
+					var key = array[0].ToLower();
+					var value = array[1];
 
-			var output = p.StandardOutput.ReadToEnd().Trim();
+					dict.Add(key, value);
+				}
+				// Otherwise add the command line argument as a key without a value.
+				else if (!dict.ContainsKey(argument))
+				{
+					dict.Add(argument, null);
+				}
+			}
 
-			p.WaitForExit();
-
-			return output;
-		}
-
-		public static string GetBranch()
-		{
-			return Run("rev-parse --abbrev-ref HEAD");
-		}
-
-		public static string GetLongHeadHash()
-		{
-			return Run("rev-parse HEAD");
+			return dict;
 		}
 	}
 }

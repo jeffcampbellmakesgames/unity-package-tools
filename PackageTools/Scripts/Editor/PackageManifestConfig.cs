@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 using System;
 using UnityEngine;
 
@@ -50,6 +49,17 @@ namespace JCMG.PackageTools.Editor
 			/// The semantic version of the dependent package in MAJOR.MINOR.PATCH format.
 			/// </summary>
 			public string packageVersion;
+		}
+
+		/// <summary>
+		/// Describes the author of this package.
+		/// </summary>
+		[Serializable]
+		public sealed class Author
+		{
+			public string name;
+			public string email;
+			public string url;
 		}
 
 		/// <summary>
@@ -106,6 +116,11 @@ namespace JCMG.PackageTools.Editor
 		/// The category the package belongs in.
 		/// </summary>
 		public string category;
+
+		/// <summary>
+		/// The author of this package.
+		/// </summary>
+		public Author author;
 
 		/// <summary>
 		/// A collection of keywords that describe the package.

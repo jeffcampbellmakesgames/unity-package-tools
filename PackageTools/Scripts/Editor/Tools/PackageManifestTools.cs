@@ -21,8 +21,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
+using System.Collections.Generic;
 using System.Text;
+using UnityEditor;
 
 namespace JCMG.PackageTools.Editor
 {
@@ -31,16 +32,16 @@ namespace JCMG.PackageTools.Editor
 	/// </summary>
 	internal static class PackageManifestTools
 	{
-		private static readonly StringBuilder JSON_STRING_BUILDER
-			= new StringBuilder(8192);
+		private static readonly StringBuilder JSON_STRING_BUILDER;
 
-		// Package Json Properties
+		// General Json symbols
 		private const string OPEN_BRACES = "{";
 		private const string OPEN_BRACKET = "[";
 		private const string CLOSED_BRACES = "}";
 		private const string CLOSED_BRACKET = "]";
 		private const string COMMA = ",";
 
+		// Package Json Properties
 		private const string NAME = @"""name"":""{0}""";
 		private const string DISPLAY_NAME = @"""displayName"":""{0}""";
 		private const string PACKAGE_VERSION = @"""version"":""{0}""";
@@ -51,6 +52,15 @@ namespace JCMG.PackageTools.Editor
 		private const string DEPENDENCIES = @"""dependencies"":";
 		private const string DEPENDENCY_CHILD_FORMAT = @"""{0}"":""{1}""";
 		private const string CATEGORY = @"""category"":""{0}""";
+		private const string AUTHOR = @"""author"":";
+		private const string AUTHOR_NAME = @"	""name"":""{0}""";
+		private const string AUTHOR_EMAIL = @"	""email"":""{0}""";
+		private const string AUTHOR_URL = @"	""url"":""{0}""";
+
+		static PackageManifestTools()
+		{
+			JSON_STRING_BUILDER = new StringBuilder(8192);
+		}
 
 		/// <summary>
 		/// Returns a Json <see cref="string"/> representation of the <see cref="PackageManifestConfig"/>
@@ -100,6 +110,20 @@ namespace JCMG.PackageTools.Editor
 
 			JSON_STRING_BUILDER.AppendFormat(CATEGORY, packageManifest.category);
 
+			// If the required author field name is present, create an author block, otherwise skip
+			if (!string.IsNullOrEmpty(packageManifest.author.name))
+			{
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.Append(AUTHOR);
+				JSON_STRING_BUILDER.Append(OPEN_BRACES);
+				JSON_STRING_BUILDER.AppendFormat(AUTHOR_NAME, packageManifest.author.name);
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.AppendFormat(AUTHOR_EMAIL, packageManifest.author.email);
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.AppendFormat(AUTHOR_URL, packageManifest.author.url);
+				JSON_STRING_BUILDER.Append(CLOSED_BRACES);
+			}
+
 			// Add the dependencies block if any exist.
 			if (packageManifest.dependencies != null &&
 			    packageManifest.dependencies.Length > 0)
@@ -134,6 +158,29 @@ namespace JCMG.PackageTools.Editor
 			JSON_STRING_BUILDER.Append(CLOSED_BRACES);
 
 			return JSON_STRING_BUILDER.ToString();
+		}
+
+		/// <summary>
+		/// Retrieves all <see cref="PackageManifestConfig"/> instances in the project.
+		/// </summary>
+		public static PackageManifestConfig[] GetAllConfigs()
+		{
+			var assetList = new List<PackageManifestConfig>();
+
+			const string TYPE_FILTER = "t:PackageManifestConfig";
+
+			var configGuids = AssetDatabase.FindAssets(TYPE_FILTER);
+			foreach (var configGuid in configGuids)
+			{
+				var assetPath = AssetDatabase.GUIDToAssetPath(configGuid);
+				var config = AssetDatabase.LoadAssetAtPath<PackageManifestConfig>(assetPath);
+				if (config != null)
+				{
+					assetList.Add(config);
+				}
+			}
+
+			return assetList.ToArray();
 		}
 	}
 }

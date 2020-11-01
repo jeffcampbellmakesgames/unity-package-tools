@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,13 +54,21 @@ namespace JCMG.PackageTools.Editor
 				fileName));
 
 			// Show the UI and kick off the package export.
-			EditorUtility.DisplayProgressBar(
-				EditorConstants.PROGRESS_BAR_TITLE_LEGACY,
-				EditorConstants.COMPILING_PROGRESS_MESSAGE,
-				0);
+			if (!Application.isBatchMode)
+			{
+				EditorUtility.DisplayProgressBar(
+					EditorConstants.PROGRESS_BAR_TITLE_LEGACY,
+					EditorConstants.COMPILING_PROGRESS_MESSAGE,
+					0);
+			}
+
 			AssetDatabase.ExportPackage(assetPaths.ToArray(), finalFilePath);
-			EditorUtility.RevealInFinder(finalFilePath);
-			EditorUtility.ClearProgressBar();
+
+			if (!Application.isBatchMode)
+			{
+				EditorUtility.RevealInFinder(finalFilePath);
+				EditorUtility.ClearProgressBar();
+			}
 		}
 
 		/// <summary>
