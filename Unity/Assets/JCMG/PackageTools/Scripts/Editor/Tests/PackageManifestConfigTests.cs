@@ -48,6 +48,7 @@ namespace JCMG.PackageTools.Editor.Tests
 				"key Y",
 				"key Z"
 			};
+			_packageManifest.author = new PackageManifestConfig.Author();
 			_packageManifest.dependencies = new[]
 			{
 				new PackageManifestConfig.Dependency {packageName = "com.unity.package-1", packageVersion = "1.0.0"},
