@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Build Unity Package
 
 # Controls when the action will run. Triggers the workflow on pushing changes to develop that include 
 # updating the 'VersionConstants.cs' since this asset will change only on a new version
