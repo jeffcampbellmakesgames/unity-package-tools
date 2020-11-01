@@ -1,0 +1,74 @@
+name: Unit Tests
+
+# Controls when the action will run. Triggers the workflow on pushing changes to develop that include 
+# updating the package manifest config since this asset is likely to change only on a new version
+on:
+  push:
+    branches: [ develop ]
+    paths:
+    - 'Unity/Assets/PackageManifests/PackageManifestConfig.asset'
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the 'develop' and 'release/stable' branch
+      - uses: actions/checkout@v2
+        with:
+          ref: 'develop'
+          path: './unity-package-tools'
+      - uses: actions/checkout@v2
+        with:
+          ref: 'release/stable'
+          path: './unity-package-tools_release'
+
+      # Retrieve cache for Unity project
+      - name: Retrieve Unity Library Cache
+        uses: actions/cache@v1.1.0
+        with:
+          path: './unity-package-tools/Unity/Library'
+          key: Library-PackageTools-Windows
+          restore-keys: |
+            Library-PackageTools
+
+      # Execute Unity Unit Tests and Upload results
+      - name: Run Unity Unit Tests
+        uses: webbertakken/unity-test-runner@v1.4
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: './unity-package-tools/Unity'
+          unityVersion: 2019.4.11f1
+      - name: Upload Unit Test Results
+        uses: actions/upload-artifact@v1
+        with:
+          name: Test results
+          path: artifacts
+
+      # Build Unity Package on Develop branch
+      - name: Execute Unity Package Build
+        uses: webbertakken/unity-builder@v2.0-alpha-1
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+        with:
+          projectPath: './unity-package-tools/Unity'
+          unityVersion: 2019.4.11f1
+          buildMethod: 'JCMG.PackageTools.Editor.PackageToolsCI.Generate'
+          allowDirtyBuild: true
+
+      # TODO Check in Unity Package on Release branch
+      - name: Add & Commit Release Changes
+        uses: EndBug/add-and-commit@v5.1.0
+        env:
+          # This is necessary in order to push a commit to the repo
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
+        with:
+          author: Github Action Bot
+          cwd: './unity-package-tools_release'
+          branch: 'release/stable'
