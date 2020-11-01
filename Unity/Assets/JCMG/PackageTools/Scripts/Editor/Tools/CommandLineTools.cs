@@ -21,33 +21,47 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-using UnityEditor;
-using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 namespace JCMG.PackageTools.Editor
 {
-	internal static class MenuItems
+	/// <summary>
+	/// Helper methods for command-line usage
+	/// </summary>
+	public static class CommandLineTools
 	{
-		[MenuItem("Tools/JCMG/PackageTools/Submit bug or feature request")]
-		internal static void OpenURLToGitHubIssuesSection()
+		// Command-Line Delimiters
+		private const string ARGUMENT_DELIMITER_STR = "=";
+		private const char ARGUMENT_DELIMITER_CHAR = '=';
+
+		/// <summary>
+		/// Returns a more easily-searchable <see cref="Dictionary{TKey,TValue}"/> of command-line arguments.
+		/// </summary>
+		/// <returns></returns>
+		public static Dictionary<string, object> GetKVPCommandLineArguments()
 		{
-			const string GITHUB_ISSUES_URL = "https://github.com/jeffcampbellmakesgames/unity-package-tools/issues";
+			var dict = new Dictionary<string, object>();
+			var arguments = Environment.GetCommandLineArgs();
+			foreach (var argument in arguments)
+			{
+				// If the commandline argument contains a value, parse that and add it
+				if (argument.Contains(ARGUMENT_DELIMITER_STR))
+				{
+					var array = argument.Split(ARGUMENT_DELIMITER_CHAR);
+					var key = array[0].ToLower();
+					var value = array[1];
 
-			Application.OpenURL(GITHUB_ISSUES_URL);
-		}
+					dict.Add(key, value);
+				}
+				// Otherwise add the command line argument as a key without a value.
+				else
+				{
+					dict.Add(argument, null);
+				}
+			}
 
-		[MenuItem("Tools/JCMG/PackageTools/Donate to support development")]
-		internal static void OpenURLToKoFi()
-		{
-			const string KOFI_URL = "https://ko-fi.com/stampyturtle";
-
-			Application.OpenURL(KOFI_URL);
-		}
-
-		[MenuItem("Tools/JCMG/PackageTools/About")]
-		internal static void OpenAboutModalDialog()
-		{
-			AboutWindow.View();
+			return dict;
 		}
 	}
 }
