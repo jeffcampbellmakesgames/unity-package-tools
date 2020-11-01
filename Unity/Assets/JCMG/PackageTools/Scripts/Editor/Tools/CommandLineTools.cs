@@ -1,4 +1,4 @@
-/*
+﻿/*
 MIT License
 
 Copyright (c) 2020 Jeff Campbell
@@ -21,36 +21,47 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+using System;
+using System.Collections.Generic;
+
 namespace JCMG.PackageTools.Editor
 {
 	/// <summary>
-	/// Version info for this library.
+	/// Helper methods for command-line usage
 	/// </summary>
-	internal static class VersionConstants
+	public static class CommandLineTools
 	{
-		/// <summary>
-		/// The semantic version
-		/// </summary>
-		public const string VERSION = "1.3.1";
+		// Command-Line Delimiters
+		private const string ARGUMENT_DELIMITER_STR = "=";
+		private const char ARGUMENT_DELIMITER_CHAR = '=';
 
 		/// <summary>
-		/// The branch of GIT this package was published from.
+		/// Returns a more easily-searchable <see cref="Dictionary{TKey,TValue}"/> of command-line arguments.
 		/// </summary>
-		public const string GIT_BRANCH = "develop";
+		/// <returns></returns>
+		public static Dictionary<string, object> GetKVPCommandLineArguments()
+		{
+			var dict = new Dictionary<string, object>();
+			var arguments = Environment.GetCommandLineArgs();
+			foreach (var argument in arguments)
+			{
+				// If the commandline argument contains a value, parse that and add it
+				if (argument.Contains(ARGUMENT_DELIMITER_STR))
+				{
+					var array = argument.Split(ARGUMENT_DELIMITER_CHAR);
+					var key = array[0].ToLower();
+					var value = array[1];
 
-		/// <summary>
-		/// The current GIT commit hash this package was published on.
-		/// </summary>
-		public const string GIT_COMMIT = "d3459e0890edfd0ef5a10ff78dc451e8c07e284f";
+					dict.Add(key, value);
+				}
+				// Otherwise add the command line argument as a key without a value.
+				else
+				{
+					dict.Add(argument, null);
+				}
+			}
 
-		/// <summary>
-		/// The UTC human-readable date this package was published at.
-		/// </summary>
-		public const string PUBLISH_DATE = "Friday, May 1, 2020";
-
-		/// <summary>
-		/// The UTC time this package was published at.
-		/// </summary>
-		public const string PUBLISH_TIME = "05/01/2020 08:44:30";
+			return dict;
+		}
 	}
 }

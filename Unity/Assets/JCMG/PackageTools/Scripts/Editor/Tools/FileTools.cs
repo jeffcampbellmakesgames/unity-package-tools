@@ -21,7 +21,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -56,9 +55,10 @@ namespace JCMG.PackageTools.Editor
 		/// <param name="packageManifest"></param>
 		public static void CreateOrUpdatePackageSource(PackageManifestConfig packageManifest)
 		{
-			#if UNITY_EDITOR
-			EditorUtility.DisplayProgressBar(EditorConstants.PROGRESS_BAR_TITLE, string.Empty, 0f);
-			#endif
+			if (!Application.isBatchMode)
+			{
+				EditorUtility.DisplayProgressBar(EditorConstants.PROGRESS_BAR_TITLE, string.Empty, 0f);
+			}
 
 			try
 			{
@@ -150,9 +150,10 @@ namespace JCMG.PackageTools.Editor
 
 				Debug.LogFormat(EditorConstants.PACKAGE_UPDATE_SUCCESS_FORMAT, packageManifest.packageName);
 
-				#if UNITY_EDITOR
-				EditorUtility.RevealInFinder(destinationPackageJsonPath);
-				#endif
+				if (!Application.isBatchMode)
+				{
+					EditorUtility.RevealInFinder(destinationPackageJsonPath);
+				}
 			}
 			catch (Exception ex)
 			{
@@ -161,10 +162,11 @@ namespace JCMG.PackageTools.Editor
 			}
 			finally
 			{
-				#if UNITY_EDITOR
-				EditorUtility.DisplayProgressBar(EditorConstants.PROGRESS_BAR_TITLE, string.Empty, 1f);
-				EditorUtility.ClearProgressBar();
-				#endif
+				if (!Application.isBatchMode)
+				{
+					EditorUtility.DisplayProgressBar(EditorConstants.PROGRESS_BAR_TITLE, string.Empty, 1f);
+					EditorUtility.ClearProgressBar();
+				}
 			}
 		}
 
