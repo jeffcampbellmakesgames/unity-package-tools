@@ -55,7 +55,7 @@ namespace JCMG.PackageTools.Editor
 					dict.Add(key, value);
 				}
 				// Otherwise add the command line argument as a key without a value.
-				else
+				else if (!dict.ContainsKey(argument))
 				{
 					dict.Add(argument, null);
 				}
