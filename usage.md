@@ -66,5 +66,18 @@ For example, my distribution strategy for packages of my open source tools and l
 
 If using this type of approach, it is helpful to clone a second copy of the repository on the same computer you are developing on where it only pulls down the release branches. From there, you can create an individual `PackageManifestConfig` asset per release branch that can include the second clones repo folder as the publish location.
 
+## Generating packages from command-line
 
+It can be desirable at times to generate legacy Unity packages and/or package source from the command-line so that they can be created and distributed as part of a continuous integration (CI) process. For example, you may want to trigger a process every time the repository is updated and source files changed so that a new package is created and made available to users. This can be done by launching the Unity Editor from the command line and supplying the appropriate arguments.
 
+**Example Command-Line Call**
+
+`"D:\Program Files\2019.4.11f1\Editor\Unity.exe" -quit -batchmode -executeMethod JCMG.PackageTools.Editor.PackageToolsCI.Generate`
+
+In this case, the `-executeMethod JCMG.PackageTools.Editor.PackageToolsCI.Generate` is the CLI argument that will trigger the PackageTools CI process to execute. By default, this will find all `PackageManifestConfig` instances in the project and if they have an appropriate output path will generate the legacy Unity package and/or package source. Progress will be output to the Unity Editor player log.
+
+An additional CLI argument `ID` (case-insensitive) can be supplied with one or more `ID` values to limit the package generation to a subset of `PackageManifestConfig` instances in the project if so desired. These `ID` values should correspond to the `ID` displayed on the `PackageManifestConfig` inspector for that instance.
+
+**Example ID Argument Usage (for three ID values passed)**
+
+`id=cb87cda2-0bfa-44dc-b583-ae61ff81efcb,e1725f4a-f9f3-42c0-ac15-756f017c90ed,6a406891-59d5-430a-815d-c252deae5d5b`
