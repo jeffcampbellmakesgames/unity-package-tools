@@ -27,6 +27,9 @@ using UnityEngine;
 
 namespace JCMG.PackageTools.Editor
 {
+	/// <summary>
+	/// A property drawer for drawing <see cref="PackageManifestConfig.Dependency"/>
+	/// </summary>
 	[CustomPropertyDrawer(typeof(PackageManifestConfig.Dependency))]
 	internal sealed class DependencyPropertyDrawer : PropertyDrawer
 	{

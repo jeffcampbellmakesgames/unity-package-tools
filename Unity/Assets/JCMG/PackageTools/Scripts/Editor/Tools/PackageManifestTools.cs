@@ -51,6 +51,10 @@ namespace JCMG.PackageTools.Editor
 		private const string DEPENDENCIES = @"""dependencies"":";
 		private const string DEPENDENCY_CHILD_FORMAT = @"""{0}"":""{1}""";
 		private const string CATEGORY = @"""category"":""{0}""";
+		private const string AUTHOR = @"""author"":";
+		private const string AUTHOR_NAME = @"	""name"":""{0}""";
+		private const string AUTHOR_EMAIL = @"	""email"":""{0}""";
+		private const string AUTHOR_URL = @"	""url"":""{0}""";
 
 		/// <summary>
 		/// Returns a Json <see cref="string"/> representation of the <see cref="PackageManifestConfig"/>
@@ -99,6 +103,20 @@ namespace JCMG.PackageTools.Editor
 			}
 
 			JSON_STRING_BUILDER.AppendFormat(CATEGORY, packageManifest.category);
+
+			// If the required author field name is present, create an author block, otherwise skip
+			if (!string.IsNullOrEmpty(packageManifest.author.name))
+			{
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.Append(AUTHOR);
+				JSON_STRING_BUILDER.Append(OPEN_BRACES);
+				JSON_STRING_BUILDER.AppendFormat(AUTHOR_NAME, packageManifest.author.name);
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.AppendFormat(AUTHOR_EMAIL, packageManifest.author.email);
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.AppendFormat(AUTHOR_URL, packageManifest.author.url);
+				JSON_STRING_BUILDER.Append(CLOSED_BRACES);
+			}
 
 			// Add the dependencies block if any exist.
 			if (packageManifest.dependencies != null &&

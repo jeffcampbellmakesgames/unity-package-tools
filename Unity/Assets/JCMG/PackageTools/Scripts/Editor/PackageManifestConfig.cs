@@ -53,6 +53,17 @@ namespace JCMG.PackageTools.Editor
 		}
 
 		/// <summary>
+		/// Describes the author of this package.
+		/// </summary>
+		[Serializable]
+		public sealed class Author
+		{
+			public string name;
+			public string email;
+			public string url;
+		}
+
+		/// <summary>
 		/// A unique id for this <see cref="PackageManifestConfig"/> instance.
 		/// </summary>
 		public string Id => _id;
@@ -106,6 +117,11 @@ namespace JCMG.PackageTools.Editor
 		/// The category the package belongs in.
 		/// </summary>
 		public string category;
+
+		/// <summary>
+		/// The author of this package.
+		/// </summary>
+		public Author author;
 
 		/// <summary>
 		/// A collection of keywords that describe the package.
