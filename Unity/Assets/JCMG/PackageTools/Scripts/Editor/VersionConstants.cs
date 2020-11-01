@@ -31,7 +31,7 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// The semantic version
 		/// </summary>
-		public const string VERSION = "1.4.0";
+		public const string VERSION = "1.4.1";
 
 		/// <summary>
 		/// The branch of GIT this package was published from.
@@ -41,7 +41,7 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// The current GIT commit hash this package was published on.
 		/// </summary>
-		public const string GIT_COMMIT = "ed4eb57c00191774ee69e8745e47444ef34799f9";
+		public const string GIT_COMMIT = "896e4a04ff74e059aa8f21422b93417fa2c00ca1";
 
 		/// <summary>
 		/// The UTC human-readable date this package was published at.
@@ -51,6 +51,6 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// The UTC time this package was published at.
 		/// </summary>
-		public const string PUBLISH_TIME = "11/01/2020 17:38:53";
+		public const string PUBLISH_TIME = "11/01/2020 19:01:09";
 	}
 }
