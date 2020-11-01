@@ -1,12 +1,12 @@
 name: Unit Tests
 
 # Controls when the action will run. Triggers the workflow on pushing changes to develop that include 
-# updating the package manifest config since this asset is likely to change only on a new version
+# updating the 'VersionConstants.cs' since this asset will change only on a new version
 on:
   push:
     branches: [ develop ]
     paths:
-    - 'Unity/Assets/PackageManifests/PackageManifestConfig.asset'
+    - 'Unity/Assets/JCMG/PackageTools/Scripts/Editor/VersionConstants.cs'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -62,13 +62,14 @@ jobs:
           buildMethod: 'JCMG.PackageTools.Editor.PackageToolsCI.Generate'
           allowDirtyBuild: true
 
-      # TODO Check in Unity Package on Release branch
+      # Check in Unity Package on Release branch
       - name: Add & Commit Release Changes
         uses: EndBug/add-and-commit@v5.1.0
         env:
           # This is necessary in order to push a commit to the repo
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
         with:
-          author: Github Action Bot
+          author_name: Github Action Bot
           cwd: './unity-package-tools_release'
           branch: 'release/stable'
+          message: 'Auto-updated package contents'
