@@ -21,6 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 namespace JCMG.PackageTools.Editor
 {
 	/// <summary>
@@ -31,7 +32,7 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// The semantic version
 		/// </summary>
-		public const string VERSION = "1.4.1";
+		public const string VERSION = "1.5.1";
 
 		/// <summary>
 		/// The branch of GIT this package was published from.
@@ -41,16 +42,16 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// The current GIT commit hash this package was published on.
 		/// </summary>
-		public const string GIT_COMMIT = "896e4a04ff74e059aa8f21422b93417fa2c00ca1";
+		public const string GIT_COMMIT = "c816a46c484475246a4d27527a0a18ac5306c15f";
 
 		/// <summary>
 		/// The UTC human-readable date this package was published at.
 		/// </summary>
-		public const string PUBLISH_DATE = "Sunday, November 1, 2020";
+		public const string PUBLISH_DATE = "Tuesday, June 1, 2021";
 
 		/// <summary>
 		/// The UTC time this package was published at.
 		/// </summary>
-		public const string PUBLISH_TIME = "11/01/2020 19:01:09";
+		public const string PUBLISH_TIME = "06/01/2021 19:38:39";
 	}
 }
