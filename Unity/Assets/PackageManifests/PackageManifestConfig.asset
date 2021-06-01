@@ -35,5 +35,5 @@ MonoBehaviour:
   - package manager
   dependencies: []
   versionConstantsPath: Assets/JCMG/PackageTools/Scripts/Editor
-  versionConstantsNamespace: JCMG.PackageTools.Editor
+  versionTemplateGuid: 060df89e9e8e1824095f90e93df5fd29
   _id: cb87cda2-0bfa-44dc-b583-ae61ff81efcb
