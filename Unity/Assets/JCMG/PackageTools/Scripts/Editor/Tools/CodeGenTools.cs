@@ -25,6 +25,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using UnityEditor;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 namespace JCMG.PackageTools.Editor
@@ -34,74 +35,8 @@ namespace JCMG.PackageTools.Editor
 	/// </summary>
 	internal static class CodeGenTools
 	{
-		private const string TEMPLATE =
-@"namespace ${namespace}
-{
-	/// <summary>
-	/// Version info for this library.
-	/// </summary>
-	internal static class VersionConstants
-	{
-		/// <summary>
-		/// The semantic version
-		/// </summary>
-		public const string VERSION = ""${version}"";
-
-		/// <summary>
-		/// The branch of GIT this package was published from.
-		/// </summary>
-		public const string GIT_BRANCH = ""${git_branch}"";
-
-		/// <summary>
-		/// The current GIT commit hash this package was published on.
-		/// </summary>
-		public const string GIT_COMMIT = ""${git_commit}"";
-
-		/// <summary>
-		/// The UTC human-readable date this package was published at.
-		/// </summary>
-		public const string PUBLISH_DATE = ""${publish_date}"";
-
-		/// <summary>
-		/// The UTC time this package was published at.
-		/// </summary>
-		public const string PUBLISH_TIME = ""${publish_utc_time}"";
-	}
-}
-";
-
-		private const string GLOBAL_TEMPLATE =
-@"/// <summary>
-/// Version info for this library.
-/// </summary>
-internal static class VersionConstants
-{
-	/// <summary>
-	/// The semantic version
-	/// </summary>
-	public const string VERSION = ""${version}"";
-
-	/// <summary>
-	/// The branch of GIT this package was published from.
-	/// </summary>
-	public const string GIT_BRANCH = ""${git_branch}"";
-
-	/// <summary>
-	/// The current GIT commit hash this package was published on.
-	/// </summary>
-	public const string GIT_COMMIT = ""${git_commit}"";
-
-	/// <summary>
-	/// The UTC human-readable date this package was published at.
-	/// </summary>
-	public const string PUBLISH_DATE = ""${publish_date}"";
-
-	/// <summary>
-	/// The UTC time this package was published at.
-	/// </summary>
-	public const string PUBLISH_TIME = ""${publish_utc_time}"";
-}
-";
+		// Templates
+		private const string VERSION_CONSTANTS_TEMPLATE_GUID = "68dda2110af2a7b43be0f611c4201653";
 
 		// Filename
 		private const string FILENAME = "VersionConstants.cs";
@@ -109,6 +44,12 @@ internal static class VersionConstants
 		// Logs
 		private const string NO_PATH_SPECIFIED = "A path must be specified for the VersionConstants.cs file to be written " +
 		                                         "to, otherwise this file will not be created.";
+
+		private const string NO_TEMPLATE_SPECIFIED = "There was no template supplied for VersionConstants via the " +
+		                                             "'versionTemplateGuid' field and the default template cannot be " +
+		                                             "found.";
+
+		private const string WRITE_FILE_LOG_FORMAT = "Attempting to generate version constants at path [{0}].";
 
 		public static void GenerateVersionConstants(PackageManifestConfig config)
 		{
@@ -122,18 +63,31 @@ internal static class VersionConstants
 			var folderPath = Path.GetFullPath(config.versionConstantsPath);
 			var filePath = Path.Combine(folderPath, FILENAME);
 
-			// Create file contents
-			var template = string.IsNullOrEmpty(config.versionConstantsNamespace)
-				? GLOBAL_TEMPLATE
-				: TEMPLATE;
+			// Create file contents. If we have a user-supplied template
+			string template;
+			if (!string.IsNullOrEmpty(config.versionTemplateGuid))
+			{
+				var assetPath = AssetDatabase.GUIDToAssetPath(config.versionTemplateGuid);
+				template = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath).text;
+			}
+			else if(string.IsNullOrEmpty(AssetDatabase.GUIDToAssetPath(VERSION_CONSTANTS_TEMPLATE_GUID)))
+			{
+				var assetPath = AssetDatabase.GUIDToAssetPath(VERSION_CONSTANTS_TEMPLATE_GUID);
+				template = AssetDatabase.LoadAssetAtPath<TextAsset>(assetPath).text;
+			}
+			else
+			{
+				throw new FileNotFoundException(NO_TEMPLATE_SPECIFIED);
+			}
 
 			var fileContents = template
-				.Replace("${namespace}", config.versionConstantsNamespace)
 				.Replace("${version}", config.packageVersion)
 				.Replace("${git_branch}", GitTools.GetBranch())
 				.Replace("${git_commit}", GitTools.GetLongHeadHash())
 				.Replace("${publish_date}", DateTime.UtcNow.ToLongDateString())
 				.Replace("${publish_utc_time}", DateTime.UtcNow.ToString(CultureInfo.InvariantCulture));
+
+			Debug.LogFormat(WRITE_FILE_LOG_FORMAT, config.versionConstantsPath);
 
 			File.WriteAllText(filePath, fileContents);
 

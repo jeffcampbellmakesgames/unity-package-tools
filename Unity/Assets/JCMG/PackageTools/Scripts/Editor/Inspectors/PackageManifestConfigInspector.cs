@@ -49,7 +49,7 @@ namespace JCMG.PackageTools.Editor
 		private const string DEPENDENCIES_PROPERTY_NAME = "dependencies";
 		private const string AUTHOR_PROPERTY_NAME = "author";
 		private const string VERSION_CONSTANTS_PATH_PROPERTY_NAME = "versionConstantsPath";
-		private const string VERSION_CONSTANTS_NAMESPACE_PROPERTY_NAME = "versionConstantsNamespace";
+		private const string VERSION_TEMPLATE_GUID_PROPERTY_NAME = "versionTemplateGuid";
 		private const string ID_PROPERTY_NAME = "_id";
 
 		private void OnEnable()
@@ -148,12 +148,10 @@ namespace JCMG.PackageTools.Editor
 				using (new EditorGUILayout.VerticalScope(EditorConstants.GROUP_BOX))
 				{
 					// Namespace
-					var namespaceProperty = serializedObject.FindProperty(VERSION_CONSTANTS_NAMESPACE_PROPERTY_NAME);
+					EditorGUILayout.HelpBox("If a custom template for VersionConstants, supply the meta GUID of " +
+					                        "the TextFile here. Otherwise the default template is used. ", MessageType.Info);
+					var namespaceProperty = serializedObject.FindProperty(VERSION_TEMPLATE_GUID_PROPERTY_NAME);
 					EditorGUILayout.PropertyField(namespaceProperty);
-					if (string.IsNullOrEmpty(namespaceProperty.stringValue))
-					{
-						EditorGUILayout.HelpBox(EditorConstants.GLOBAL_NAMESPACE_WARNING, MessageType.Info);
-					}
 
 					// Output folder
 					using (new EditorGUILayout.HorizontalScope())

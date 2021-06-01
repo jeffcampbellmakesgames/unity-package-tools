@@ -24,6 +24,7 @@ SOFTWARE.
 using System;
 using System.Linq;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 namespace JCMG.PackageTools.Editor
@@ -35,6 +36,8 @@ namespace JCMG.PackageTools.Editor
 	{
 		// Command-line arguments
 		private const string ID_ARG_KEY = "id";
+		private const string VERSION_ARG_KEY = "version";
+		private const string GENERATE_VERSION_CONSTANTS_ARG_KEY = "generateversionconstants";
 
 		// Logs
 		private const string LOG_PREFIX = "[Package Tools] ";
@@ -68,84 +71,129 @@ namespace JCMG.PackageTools.Editor
 		{
 			Debug.Log(CI_STARTING);
 
-			// Get command line args and log them
-			var commandLineArgs = CommandLineTools.GetKVPCommandLineArguments();
-
-			SB.Clear();
-			const string CLI_ARG_FORMAT = "{0} => {1}";
-			foreach (var commandLineArg in commandLineArgs)
+			try
 			{
-				SB.AppendFormat(CLI_ARG_FORMAT, commandLineArg.Key, commandLineArg.Value);
-				SB.AppendLine();
-			}
+				EditorApplication.LockReloadAssemblies();
+				AssetDatabase.StartAssetEditing();
 
-			Debug.LogFormat(CI_COMMAND_LINE_ARGS_PARSED_FORMAT, SB.ToString());
+				// Get command line args and log them
+				var commandLineArgs = CommandLineTools.GetKVPCommandLineArguments();
 
-			// Get all package manifests in project
-			var allPackageManifestConfigs = PackageManifestTools.GetAllConfigs();
-
-			Debug.LogFormat(CI_FOUND_CONFIGS, allPackageManifestConfigs.Length);
-
-			// Check to see if any IDs have been passed for specific configs
-			string[] configIds;
-			if (commandLineArgs.ContainsKey(ID_ARG_KEY))
-			{
-				Debug.Log(CI_USING_ONLY_CONFIGS_FROM_ARG);
-
-				const char COMMA_CHAR = ',';
-				var idArgValue = commandLineArgs[ID_ARG_KEY].ToString();
-				configIds = idArgValue.Split(COMMA_CHAR);
-			}
-			// Otherwise generate all package manifest configs in project.
-			else
-			{
-				Debug.Log(CI_USING_ALL_CONFIGS);
-
-				configIds = allPackageManifestConfigs.Select(x => x.Id).ToArray();
-			}
-
-			// For each matching config ID, find the matching package manifest config and generate any relevant packages.
-			Debug.Log(CI_GENERATION_STARTING);
-			foreach (var configId in configIds)
-			{
-				var matchingConfig = allPackageManifestConfigs.FirstOrDefault(x =>
-					string.Compare(x.Id, configId, StringComparison.OrdinalIgnoreCase) == 0);
-
-				// If a config cannot be found matching config id, skip it and continue.
-				if (matchingConfig == null)
+				SB.Clear();
+				const string CLI_ARG_FORMAT = "{0} => {1}";
+				foreach (var commandLineArg in commandLineArgs)
 				{
-					Debug.LogWarningFormat(CI_PACKAGE_NOT_FOUND_FORMAT, configId);
-
-					continue;
+					SB.AppendFormat(CLI_ARG_FORMAT, commandLineArg.Key, commandLineArg.Value);
+					SB.AppendLine();
 				}
 
-				var configName = matchingConfig.name;
+				Debug.LogFormat(CI_COMMAND_LINE_ARGS_PARSED_FORMAT, SB.ToString());
 
-				Debug.LogFormat(CI_PACKAGE_FOUND_FORMAT, configName, configId);
-
-				// Otherwise generate the corresponding legacy unity package and package source if their output paths
-				// have been defined
-				if (!string.IsNullOrEmpty(matchingConfig.legacyPackageDestinationPath))
+				// Attempt to parse CLI-passed version, if present.
+				string version = null;
+				if (commandLineArgs.TryGetValue(VERSION_ARG_KEY, out var versionRawValue))
 				{
-					Debug.LogFormat(CI_GENERATING_LEGACY_PACKAGE_FORMAT, configName, configId);
-
-					UnityFileTools.CompileLegacyPackage(matchingConfig);
+					version = (string)versionRawValue;
 				}
+
+				// See if we should generate version constants
+				var generateVersionConstants = false;
+				if (commandLineArgs.TryGetValue(
+					GENERATE_VERSION_CONSTANTS_ARG_KEY,
+					out var generateVersionConstantsRawValue))
+				{
+					generateVersionConstants = bool.Parse(generateVersionConstantsRawValue.ToString());
+				}
+
+				// Get all package manifests in project
+				var allPackageManifestConfigs = PackageManifestTools.GetAllConfigs();
+
+				Debug.LogFormat(CI_FOUND_CONFIGS, allPackageManifestConfigs.Length);
+
+				// Check to see if any IDs have been passed for specific configs
+				string[] configIds;
+				if (commandLineArgs.ContainsKey(ID_ARG_KEY))
+				{
+					Debug.Log(CI_USING_ONLY_CONFIGS_FROM_ARG);
+
+					const char COMMA_CHAR = ',';
+					var idArgValue = commandLineArgs[ID_ARG_KEY].ToString();
+					configIds = idArgValue.Split(COMMA_CHAR);
+				}
+				// Otherwise generate all package manifest configs in project.
 				else
 				{
-					Debug.LogFormat(CI_SKIPPING_LEGACY_PACKAGE_FORMAT, configName, configId);
+					Debug.Log(CI_USING_ALL_CONFIGS);
+
+					configIds = allPackageManifestConfigs.Select(x => x.Id).ToArray();
 				}
 
-				if (!string.IsNullOrEmpty(matchingConfig.packageDestinationPath))
+				// For each matching config ID, find the matching package manifest config and generate any relevant packages.
+				Debug.Log(CI_GENERATION_STARTING);
+				foreach (var configId in configIds)
 				{
-					Debug.LogFormat(CI_GENERATING_PACKAGE_SOURCE_FORMAT, configName, configId);
+					var matchingConfig = allPackageManifestConfigs.FirstOrDefault(x =>
+						string.Compare(x.Id, configId, StringComparison.OrdinalIgnoreCase) == 0);
 
-					FileTools.CreateOrUpdatePackageSource(matchingConfig);
+					// If a config cannot be found matching config id, skip it and continue.
+					if (matchingConfig == null)
+					{
+						Debug.LogWarningFormat(CI_PACKAGE_NOT_FOUND_FORMAT, configId);
+
+						continue;
+					}
+
+					var configName = matchingConfig.name;
+
+					Debug.LogFormat(CI_PACKAGE_FOUND_FORMAT, configName, configId);
+
+					// Set the CLI passed version if present, otherwise default to checked in version number.
+					if (!string.IsNullOrEmpty(version))
+					{
+						matchingConfig.packageVersion = version;
+
+						EditorUtility.SetDirty(matchingConfig);
+					}
+
+					// If set to generate version constants, do so.
+					if (generateVersionConstants)
+					{
+						CodeGenTools.GenerateVersionConstants(matchingConfig);
+					}
+
+					// Otherwise generate the corresponding legacy unity package and package source if their output paths
+					// have been defined
+					if (!string.IsNullOrEmpty(matchingConfig.legacyPackageDestinationPath))
+					{
+						Debug.LogFormat(CI_GENERATING_LEGACY_PACKAGE_FORMAT, configName, configId);
+
+						UnityFileTools.CompileLegacyPackage(matchingConfig);
+					}
+					else
+					{
+						Debug.LogFormat(CI_SKIPPING_LEGACY_PACKAGE_FORMAT, configName, configId);
+					}
+
+					if (!string.IsNullOrEmpty(matchingConfig.packageDestinationPath))
+					{
+						Debug.LogFormat(CI_GENERATING_PACKAGE_SOURCE_FORMAT, configName, configId);
+
+						FileTools.CreateOrUpdatePackageSource(matchingConfig);
+					}
+					else
+					{
+						Debug.LogFormat(CI_SKIPPING_PACKAGE_SOURCE_FORMAT, configName, configId);
+					}
 				}
-				else
-				{
-					Debug.LogFormat(CI_SKIPPING_PACKAGE_SOURCE_FORMAT, configName, configId);
-				}
+			}
+			catch (Exception e)
+			{
+				Debug.LogErrorFormat("An unexpected error occured during package generation:\n\n{0}", e);
+			}
+			finally
+			{
+				AssetDatabase.StopAssetEditing();
+				EditorApplication.UnlockReloadAssemblies();
 			}
 
 			Debug.Log(CI_COMPLETE);

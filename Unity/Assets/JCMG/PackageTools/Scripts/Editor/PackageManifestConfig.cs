@@ -138,10 +138,9 @@ namespace JCMG.PackageTools.Editor
 		public string versionConstantsPath;
 
 		/// <summary>
-		/// The namespace the generated VersionConstants class will be in. If left blank, this will be
-		/// the global namespace.
+		/// The asset GUID of the text file that should be used to template the version constants file.
 		/// </summary>
-		public string versionConstantsNamespace;
+		public string versionTemplateGuid;
 
 		[SerializeField]
 		private string _id;
