@@ -1,17 +1,19 @@
 # =============== #
 # Unity generated #
 # =============== #
+[Bb]in/
+[Bb]uild/
+[Bb]uilds/
+[Oo]bj/
+[Ll]ibrary/
 [Ll]ogs/
 [Tt]emp/
-[Oo]bj/
-[Bb]uild
-/[Ll]ibrary/
+[Rr]ecordings/
+[Mm]emoryCaptures/
+BuildReports/
+UserSettings/
 sysinfo.txt
 *.stackdump
-
-# JetBrains Plugin
-JetBrains/
-JetBrains.meta
  
 # ============================================= #
 # Visual Studio / MonoDevelop / Rider generated #
@@ -22,11 +24,12 @@ JetBrains.meta
 /*.csproj
 /*.pidb
 /*.suo
-/*.sln*
 /*.user
 /*.unityproj
 /*.booproj
 /.idea*/
+**/Editor/JetBrains*
+ProjectSettings/RiderScriptEditorPersistedState.asset
  
 # ============ #
 # OS generated #
