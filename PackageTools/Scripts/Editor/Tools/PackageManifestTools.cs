@@ -57,6 +57,16 @@ namespace JCMG.PackageTools.Editor
 		private const string AUTHOR_EMAIL = @"	""email"":""{0}""";
 		private const string AUTHOR_URL = @"	""url"":""{0}""";
 
+		// publish config
+		private const string PUBLISH_CONFIG = @"""publishConfig"":";
+		private const string REGISTRY_URL = @"	""registry"":""{0}""";
+
+		// repository
+		private const string REPOSITORY = @"""repository"":";
+		private const string REPOSITORY_TYPE = @"	""type"":""{0}""";
+		private const string REPOSITORY_URL = @"	""url"":""{0}""";
+		private const string REPOSITORY_DIRECTORY = @"	""directory"":""{0}""";
+
 		static PackageManifestTools()
 		{
 			JSON_STRING_BUILDER = new StringBuilder(8192);
@@ -151,6 +161,34 @@ namespace JCMG.PackageTools.Editor
 						JSON_STRING_BUILDER.Append(COMMA);
 					}
 				}
+
+				JSON_STRING_BUILDER.Append(CLOSED_BRACES);
+			}
+
+			// Add the publishing config, if present.
+			if (!string.IsNullOrEmpty(packageManifest.publishConfig.registry))
+			{
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.Append(PUBLISH_CONFIG);
+				JSON_STRING_BUILDER.Append(OPEN_BRACES);
+
+				JSON_STRING_BUILDER.AppendFormat(REGISTRY_URL, packageManifest.publishConfig.registry);
+
+				JSON_STRING_BUILDER.Append(CLOSED_BRACES);
+			}
+
+			// Add the repository config, if present.
+			if (packageManifest.repository.HasContent())
+			{
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.Append(REPOSITORY);
+				JSON_STRING_BUILDER.Append(OPEN_BRACES);
+
+				JSON_STRING_BUILDER.AppendFormat(REPOSITORY_TYPE, packageManifest.repository.type);
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.AppendFormat(REPOSITORY_URL, packageManifest.repository.url);
+				JSON_STRING_BUILDER.Append(COMMA);
+				JSON_STRING_BUILDER.AppendFormat(REPOSITORY_DIRECTORY, packageManifest.repository.directory);
 
 				JSON_STRING_BUILDER.Append(CLOSED_BRACES);
 			}
