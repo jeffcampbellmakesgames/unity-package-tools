@@ -188,9 +188,17 @@ namespace JCMG.PackageTools.Editor
 			EditorGUILayout.LabelField(EditorConstants.PACKAGE_ACTIONS_HEADER, EditorStyles.boldLabel);
 
 			if (GUILayout.Button(new GUIContent(
-				EditorConstants.GENERATE_VERSION_CONSTANTS_BUTTON_TEXT,
-				EditorConstants.GENERATE_VERSION_CONSTANTS_TOOLTIP)))
+				    EditorConstants.GENERATE_VERSION_CONSTANTS_BUTTON_TEXT,
+				    EditorConstants.GENERATE_VERSION_CONSTANTS_TOOLTIP)))
 			{
+				CodeGenTools.GenerateVersionConstants(config);
+			}
+
+			if (GUILayout.Button(new GUIContent(
+				EditorConstants.GENERATE_VERSION_CONSTANTS_AND_PACKAGE_JSON_BUTTON_TEXT,
+				EditorConstants.GENERATE_VERSION_CONSTANTS_AND_PACKAGE_JSON_BUTTON_TOOLTIP)))
+			{
+				FileTools.CreatePackageJsonAtSourceFolder(config);
 				CodeGenTools.GenerateVersionConstants(config);
 			}
 

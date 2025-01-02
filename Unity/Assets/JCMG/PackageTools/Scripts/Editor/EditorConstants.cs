@@ -74,10 +74,20 @@ namespace JCMG.PackageTools.Editor
 		public const string DEPENDENCY_HEADER_LABEL = "Dependencies";
 		public const string DEPENDENCY_ELEMENT_LABEL_FORMAT = "Dependency {0}:";
 
-		public const string GENERATE_VERSION_CONSTANTS_BUTTON_TEXT = "Generate VersionConstants.cs";
-		public const string GENERATE_VERSION_CONSTANTS_TOOLTIP = "If an output path is specified, a [VersionConstants.cs] file " +
-		                                                         "will be created containing descriptive information about the " +
-		                                                         "package. This can be output to an Runtime or Editor folder.";
+		public const string GENERATE_VERSION_CONSTANTS_BUTTON_TEXT
+			= "Generate VersionConstants.cs.";
+
+		public const string GENERATE_VERSION_CONSTANTS_TOOLTIP
+			= "If an output path is specified, a [VersionConstants.cs] file will be created containing descriptive " +
+			  "information about the package. This can be output to an Runtime or Editor folder.";
+
+		public const string GENERATE_VERSION_CONSTANTS_AND_PACKAGE_JSON_BUTTON_TEXT
+			= "Generate VersionConstants.cs and root package.json file.";
+
+		public const string GENERATE_VERSION_CONSTANTS_AND_PACKAGE_JSON_BUTTON_TOOLTIP
+			= "If an output path is specified, a [VersionConstants.cs] file will be created containing descriptive " +
+			  "information about the package. This can be output to an Runtime or Editor folder. In addition, a " +
+			  "package.json file will be created at the first source folder.";
 
 		public const string UPDATE_PACKAGE_BUTTON_TEXT = "Export Package Source";
 		public const string EXPORT_LEGACY_PACKAGE_BUTTON_TEXT = "Export as Legacy Package";
@@ -93,11 +103,18 @@ namespace JCMG.PackageTools.Editor
 		public const float FOLDER_PATH_PICKER_HEIGHT = 26f;
 		public const float FOLDER_PATH_PICKER_BUFFER = 36f;
 
+		// Errors
+		public const string NO_SOURCE_PATH_FOUND_ERROR =
+			"A single source path must be specified in order to create a package json at that location.";
+
 		// Logging
 		public const string PACKAGE_UPDATE_ERROR_FORMAT =
 			"[Package Tools] Failed to update package source for [{0}].";
 
 		public const string PACKAGE_UPDATE_SUCCESS_FORMAT =
 			"[Package Tools] Successfully updated package source for [{0}].";
+
+		public const string PACKAGE_JSON_UPDATE_SUCCESS_FORMAT =
+			"[Package Tools] Successfully generated/updated the package.json file at source folder: [{0}].";
 	}
 }

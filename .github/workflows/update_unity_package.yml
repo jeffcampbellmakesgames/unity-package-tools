@@ -18,20 +18,35 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: 'develop'
-          path: './unity-package-tools'
+          path: './package_source'
+          fetch-depth: 0
       - uses: actions/checkout@v4
         with:
           ref: 'release/stable'
-          path: './unity-package-tools_release'
+          path: './package_source_release'
+          fetch-depth: 0
 
       # Retrieve cache for Unity project
       - name: Retrieve Unity Library Cache
         uses: actions/cache@v3
         with:
           path: Library
-          key: Library-${{ hashFiles('./unity-package-tools/Unity/Assets/**', './unity-package-tools/Unity/Packages/**', './unity-package-tools/Unity/ProjectSettings/**') }}
+          key: Library-${{ hashFiles('./package_source/Unity/Assets/**', './package_source/Unity/Packages/**', './package_source/Unity/ProjectSettings/**') }}
           restore-keys: |
             Library-
+
+      # Install GitVersion
+      #- name: Install GitVersion
+      #  uses: gittools/actions/gitversion/setup@v0.9.7
+      #  with:
+      #    versionSpec: '5.x'
+
+      ## Install & Execute GitVersion
+      #- name: Use GitVersion
+      #  env:
+      #    ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      #  run: |
+      #    dotnet-gitversion package_source /config GitVersion.yml /output buildserver /nonormalize /updateassemblyinfo /ensureassemblyinfo /diag /verbosity Diagnostic
 
       # Execute Unity Unit Tests and Upload results
       # - name: Run Unity Unit Tests
@@ -41,7 +56,7 @@ jobs:
       #     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
       #     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
       #  with:
-      #     projectPath: './unity-package-tools/Unity'
+      #     projectPath: './package_source/Unity'
       #     unityVersion: 6000.0.28f1
 
       # - name: Upload Unit Test Results
@@ -58,7 +73,7 @@ jobs:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
-          projectPath: './unity-package-tools/Unity'
+          projectPath: './package_source/Unity'
           unityVersion: 6000.0.28f1
           buildMethod: 'JCMG.PackageTools.Editor.PackageToolsCI.Generate'
           allowDirtyBuild: true
@@ -71,6 +86,24 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
         with:
           author_name: Github Action Bot
-          cwd: './unity-package-tools_release'
+          cwd: './package_source_release'
           branch: 'release/stable'
           message: 'Auto-updated package contents'
+
+      # Tag commit just made with new Unity package version and push it to remote for release/stable
+      # - name: Create Tag
+      #  run: |
+      #    cd './package_source'
+      #    git config --global user.email "mirraraenn@gmail.com"
+      #    git config --global user.name "Github Action Bot"
+      #    git tag -a "upm/v${{ env.GitVersion_MajorMinorPatch }}" -m "v${{ env.GitVersion_MajorMinorPatch }}"
+      #    git push origin --tags
+
+      # Tag commit just made with new Unity package version and push it to remote for develop
+      #- name: Create Tag
+      #  run: |
+      #    cd './package_source_release'
+      #    git config --global user.email "mirraraenn@gmail.com"
+      #    git config --global user.name "Github Action Bot"
+      #    git tag -a "v${{ env.GitVersion_MajorMinorPatch }}" -m "v${{ env.GitVersion_MajorMinorPatch }}"
+      #    git push origin --tags

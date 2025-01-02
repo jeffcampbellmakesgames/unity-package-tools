@@ -128,13 +128,13 @@ namespace JCMG.PackageTools.Editor
 						var parentDirectoryPath = fileInfo.Directory.FullName;
 						var newPath = normalizedSourcePath.Replace(parentDirectoryPath, normalizedDestinationPath);
 
-						File.Copy(normalizedSourcePath, newPath);
+						File.Copy(normalizedSourcePath, newPath, overwrite:true);
 
 						var sourceMetaPath = string.Format(EditorConstants.META_FORMAT, normalizedSourcePath);
 						if (File.Exists(sourceMetaPath))
 						{
 							var newMetaPath = sourceMetaPath.Replace(parentDirectoryPath, normalizedDestinationPath);
-							File.Copy(sourceMetaPath, newMetaPath);
+							File.Copy(sourceMetaPath, newMetaPath, overwrite:true);
 						}
 					}
 					// Otherwise if this is a folder, copy it and all the contents over to the destination folder.
@@ -168,6 +168,26 @@ namespace JCMG.PackageTools.Editor
 					EditorUtility.ClearProgressBar();
 				}
 			}
+		}
+
+		/// <summary>
+		/// Creates a package json file at the first source path in the config.
+		/// </summary>
+		public static void CreatePackageJsonAtSourceFolder(PackageManifestConfig packageManifest)
+		{
+			if (packageManifest.packageSourcePaths.Length == 0)
+			{
+				throw new Exception(EditorConstants.NO_SOURCE_PATH_FOUND_ERROR);
+			}
+
+			var firstSourcePath = packageManifest.packageSourcePaths[0];
+			var packageJsonAssetPath = Path.Combine(firstSourcePath, EditorConstants.PACKAGE_JSON_FILENAME);
+			var fullPackageJsonAssetPath = Path.GetFullPath(packageJsonAssetPath);
+
+			File.WriteAllText(fullPackageJsonAssetPath, packageManifest.GenerateJson());
+			AssetDatabase.ImportAsset(packageJsonAssetPath, ImportAssetOptions.ForceUpdate);
+
+			Debug.LogFormat(EditorConstants.PACKAGE_JSON_UPDATE_SUCCESS_FORMAT, packageManifest.packageName);
 		}
 
 		/// <summary>
@@ -223,7 +243,7 @@ namespace JCMG.PackageTools.Editor
 				}
 
 				var newPath = Path.GetFullPath(fi.FullName).Replace(normalizedSourcePath, normalizedDestinationPath);
-				File.Copy(fi.FullName, newPath);
+				File.Copy(fi.FullName, newPath, overwrite:true);
 			}
 		}
 
