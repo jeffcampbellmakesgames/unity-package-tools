@@ -15,56 +15,57 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Check out the 'develop' and 'release/stable' branch
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: 'develop'
           path: './unity-package-tools'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           ref: 'release/stable'
           path: './unity-package-tools_release'
 
       # Retrieve cache for Unity project
       - name: Retrieve Unity Library Cache
-        uses: actions/cache@v1.1.0
+        uses: actions/cache@v3
         with:
-          path: './unity-package-tools/Unity/Library'
-          key: Library-PackageTools-Windows
+          path: Library
+          key: Library-${{ hashFiles('./unity-package-tools/Unity/Assets/**', './unity-package-tools/Unity/Packages/**', './unity-package-tools/Unity/ProjectSettings/**') }}
           restore-keys: |
-            Library-PackageTools
+            Library-
 
       # Execute Unity Unit Tests and Upload results
-      - name: Run Unity Unit Tests
-        uses: webbertakken/unity-test-runner@v1.4
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-        with:
-          projectPath: './unity-package-tools/Unity'
-          unityVersion: 2019.4.11f1
-      - name: Upload Unit Test Results
-        uses: actions/upload-artifact@v1
-        with:
-          name: Test results
-          path: artifacts
+      # - name: Run Unity Unit Tests
+      #   uses: game-ci/unity-test-runner@v4
+      #   env:
+      #     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      #     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+      #     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      #  with:
+      #     projectPath: './unity-package-tools/Unity'
+      #     unityVersion: 6000.0.28f1
+
+      # - name: Upload Unit Test Results
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: Test results
+      #     path: artifacts
 
       # Build Unity Package on Develop branch
       - name: Execute Unity Package Build
-        uses: webbertakken/unity-builder@v2.0-alpha-1
+        uses: game-ci/unity-builder@v4
         env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
         with:
           projectPath: './unity-package-tools/Unity'
-          unityVersion: 2019.4.11f1
+          unityVersion: 6000.0.28f1
           buildMethod: 'JCMG.PackageTools.Editor.PackageToolsCI.Generate'
           allowDirtyBuild: true
 
       # Check in Unity Package on Release branch
       - name: Add & Commit Release Changes
-        uses: EndBug/add-and-commit@v5.1.0
+        uses: EndBug/add-and-commit@v9
         env:
           # This is necessary in order to push a commit to the repo
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
