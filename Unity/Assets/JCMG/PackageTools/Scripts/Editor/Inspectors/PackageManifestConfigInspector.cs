@@ -47,6 +47,8 @@ namespace JCMG.PackageTools.Editor
 		private const string CATEGORY_PROPERTY_NAME = "category";
 		private const string KEYWORDS_PROPERTY_NAME = "keywords";
 		private const string DEPENDENCIES_PROPERTY_NAME = "dependencies";
+		private const string REPOSITORY_PROPERTY_NAME = "repository";
+		private const string PUBLISH_CONFIG_PROPERTY_NAME = "publishConfig";
 		private const string AUTHOR_PROPERTY_NAME = "author";
 		private const string VERSION_CONSTANTS_PATH_PROPERTY_NAME = "versionConstantsPath";
 		private const string VERSION_TEMPLATE_GUID_PROPERTY_NAME = "versionTemplateGuid";
@@ -110,6 +112,16 @@ namespace JCMG.PackageTools.Editor
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(DESCRIPTION_PROPERTY_NAME));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(CATEGORY_PROPERTY_NAME));
 				EditorGUILayout.PropertyField(serializedObject.FindProperty(AUTHOR_PROPERTY_NAME));
+
+				using (new EditorGUILayout.VerticalScope(EditorConstants.GROUP_BOX))
+				{
+					EditorGUILayout.PropertyField(serializedObject.FindProperty(REPOSITORY_PROPERTY_NAME));
+				}
+
+				using (new EditorGUILayout.VerticalScope(EditorConstants.GROUP_BOX))
+				{
+					EditorGUILayout.PropertyField(serializedObject.FindProperty(PUBLISH_CONFIG_PROPERTY_NAME));
+				}
 
 				_keywordReorderableList.DoLayoutList();
 				_dependenciesReorderableList.DoLayoutList();

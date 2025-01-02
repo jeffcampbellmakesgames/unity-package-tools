@@ -20,7 +20,7 @@ MonoBehaviour:
   legacyPackageDestinationPath: ../Builds
   packageName: com.jeffcampbellmakesgames.packagetools
   displayName: JCMG Package Tools
-  packageVersion: 1.5.1
+  packageVersion: 1.6.0
   unityVersion: 2019.4
   description: Contains a set of Unity development tools to help support exporting
     and/or updating package contents. \n\nFor more information, see https://github.com/jeffcampbellmakesgames/unity-package-tools
@@ -34,6 +34,12 @@ MonoBehaviour:
   - package
   - package manager
   dependencies: []
+  publishConfig:
+    registry: https://npm.pkg.github.com/@jcampbell
+  repository:
+    type: git
+    url: https://github.com/jeffcampbellmakesgames/unity-package-tools
+    directory: 
   versionConstantsPath: Assets/JCMG/PackageTools/Scripts/Editor
   versionTemplateGuid: 060df89e9e8e1824095f90e93df5fd29
   _id: cb87cda2-0bfa-44dc-b583-ae61ff81efcb
