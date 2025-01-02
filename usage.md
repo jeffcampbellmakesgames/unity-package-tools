@@ -124,11 +124,17 @@ namespace JCMG.PackageTools.Editor
 
 ## Publishing Strategy
 
+### GIT
+
 The location that you export your package source to is largely based on how you want to publish it for yourself or end-users. Packages can be referenced a variety of ways as either a local file or git URL; the link [here](https://forum.unity.com/threads/git-support-on-package-manager.573673/) contains some of the most up-to-date information I have found so far for publishing your own packages.
 
 For example, my distribution strategy for packages of my open source tools and libraries has been to create orphaned branches on their git repository that contains only the package contents itself (no development tools, Unity projects, etc...). This allows me to separate how the tools are developed with how they are published and opens up a great deal of flexibility in how/when releases are made available via separate branches (for a stable, alpha, nightly, etc... versions of a package).
 
 If using this type of approach, it is helpful to clone a second copy of the repository on the same computer you are developing on where it only pulls down the release branches. From there, you can create an individual `PackageManifestConfig` asset per release branch that can include the second clones repo folder as the publish location.
+
+### NPM
+
+Packages can also be published to an NPM-compatible registry and referenced by Unity as a custom scoped registry. The `PackageManifest` config can help support this through the **Publish Config** section; the **Registry** field describes the location that calling `npm publish` will publish to.
 
 ## Generating packages from command-line
 

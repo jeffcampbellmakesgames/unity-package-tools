@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 using System;
+using System.Security.Policy;
 using UnityEngine;
 
 namespace JCMG.PackageTools.Editor
@@ -49,6 +50,42 @@ namespace JCMG.PackageTools.Editor
 			/// The semantic version of the dependent package in MAJOR.MINOR.PATCH format.
 			/// </summary>
 			public string packageVersion;
+		}
+
+		/// <summary>
+		/// Contains the configuration for where the package should be published to.
+		/// </summary>
+		[Serializable]
+		public sealed class PublishConfig
+		{
+			/// <summary>
+			/// The url where the registry is located at.
+			/// </summary>
+			public string registry;
+		}
+
+		/// <summary>
+		/// Contains helpful information for developers where the development of this package is located. See
+		/// https://docs.npmjs.com/cli/v11/configuring-npm/package-json#repository for more info.
+		/// </summary>
+		[Serializable]
+		public sealed class Repository
+		{
+			/// <summary>
+			/// The type of repository where the
+			/// </summary>
+			public string type;
+			public string url;
+			public string directory;
+
+			/// <summary>
+			/// Returns true if this has any repository information, otherwise false.
+			/// </summary>
+			public bool HasContent()
+			{
+				return !string.IsNullOrEmpty(type) &&
+				       !string.IsNullOrEmpty(url);
+			}
 		}
 
 		/// <summary>
@@ -131,6 +168,16 @@ namespace JCMG.PackageTools.Editor
 		/// A collection of packages that this package depends on.
 		/// </summary>
 		public Dependency[] dependencies;
+
+		/// <summary>
+		/// The publishing config describing where the package is published to.
+		/// </summary>
+		public PublishConfig publishConfig;
+
+		/// <summary>
+		/// Contains helpful information for developers where the development of this package is located.
+		/// </summary>
+		public Repository repository;
 
 		/// <summary>
 		/// A path to the where the VersionConstants.cs file should be created/updated
