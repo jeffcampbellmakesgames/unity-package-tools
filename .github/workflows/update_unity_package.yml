@@ -74,7 +74,7 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           projectPath: './package_source/Unity'
-          unityVersion: 6000.0.28f1
+          unityVersion: 6000.3.11f1
           buildMethod: 'JCMG.PackageTools.Editor.PackageToolsCI.Generate'
           allowDirtyBuild: true
 

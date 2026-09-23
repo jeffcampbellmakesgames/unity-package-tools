@@ -28,9 +28,14 @@ using UnityEditor;
 namespace JCMG.PackageTools.Editor
 {
 	/// <summary>
-	/// Helper methods for the Package Manifest Tools
+	/// Helper methods for the Package Manifest Tools.
 	/// </summary>
-	internal static class PackageManifestTools
+	/// <remarks>
+	/// Public so that consuming projects can drive package-manifest generation from their own
+	/// editor scripts, for example a batch-mode CI check that regenerates <c>package.json</c> and
+	/// verifies the committed copy still matches its <see cref="PackageManifestConfig"/>.
+	/// </remarks>
+	public static class PackageManifestTools
 	{
 		private static readonly StringBuilder JSON_STRING_BUILDER;
 

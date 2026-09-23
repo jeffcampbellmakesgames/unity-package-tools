@@ -31,9 +31,14 @@ using UnityEngine;
 namespace JCMG.PackageTools.Editor
 {
 	/// <summary>
-	/// Helper methods for dealing with files/directories
+	/// Helper methods for dealing with files/directories.
 	/// </summary>
-	internal static class FileTools
+	/// <remarks>
+	/// Public so that consuming projects can generate package output from their own editor
+	/// scripts rather than only through the inspector button, which is what makes package
+	/// generation verifiable from batch mode.
+	/// </remarks>
+	public static class FileTools
 	{
 		/// <summary>
 		/// Converts <paramref name="fullFilePath"/> into a relative file path from <paramref name="referencePath"/>.

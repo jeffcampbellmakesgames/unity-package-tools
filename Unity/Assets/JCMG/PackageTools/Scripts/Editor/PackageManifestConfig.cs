@@ -157,7 +157,7 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// The author of this package.
 		/// </summary>
-		public Author author;
+		public Author author = new ();
 
 		/// <summary>
 		/// A collection of keywords that describe the package.
@@ -167,17 +167,17 @@ namespace JCMG.PackageTools.Editor
 		/// <summary>
 		/// A collection of packages that this package depends on.
 		/// </summary>
-		public Dependency[] dependencies;
+		public Dependency[] dependencies = Array.Empty<Dependency>();
 
 		/// <summary>
 		/// The publishing config describing where the package is published to.
 		/// </summary>
-		public PublishConfig publishConfig;
+		public PublishConfig publishConfig = new ();
 
 		/// <summary>
 		/// Contains helpful information for developers where the development of this package is located.
 		/// </summary>
-		public Repository repository;
+		public Repository repository = new ();
 
 		/// <summary>
 		/// A path to the where the VersionConstants.cs file should be created/updated
